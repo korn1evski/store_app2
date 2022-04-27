@@ -7,4 +7,6 @@ import '../entities/products.entity.dart';
 abstract class SwaggerRepository {
   Future<ProductsEntity> getResultData(int currentPage);
   Future<List<CategoryEntity>> getCategoriesData();
+  Future<ProductEntity> getProductById(int id);
+  Future<List<ProductEntity>> getAllProducts();
 }

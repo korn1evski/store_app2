@@ -1,6 +1,7 @@
 
 import 'package:store_app/data/remote/data_sources/swagger_remote_data_source.dart';
 import 'package:store_app/domain/entities/category_entity.dart';
+import 'package:store_app/domain/entities/product_entity.dart';
 import 'package:store_app/domain/entities/products.entity.dart';
 import 'package:store_app/domain/repositories/swagger_repository.dart';
 
@@ -12,4 +13,10 @@ class SwaggerRepositoryImpl extends SwaggerRepository {
 
   @override
   Future<ProductsEntity> getResultData(int currentPage) => swaggerRemoteDataSource.getResultData(currentPage);
+
+  @override
+  Future<ProductEntity> getProductById(int id)  => swaggerRemoteDataSource.getProductById(id);
+
+  @override
+  Future<List<ProductEntity>> getAllProducts() => swaggerRemoteDataSource.getAllProducts();
 }

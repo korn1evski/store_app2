@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:store_app/injection_container.dart' as di;
 import 'package:store_app/presentation/manager/favorites_main/favorites_main_cubit.dart';
 
+import '../../manager/all_favorites/all_favorites_cubit.dart';
 import '../favorite_circle.dart';
 
 class TopDetailPage extends StatefulWidget {
@@ -73,6 +74,8 @@ class _TopDetailPageState extends State<TopDetailPage> {
                               } else {
                                 BlocProvider.of<FavoritesMainCubit>(context).refreshProductAdded();
                               }
+                              BlocProvider.of<AllFavoritesCubit>(context).loading();
+                              BlocProvider.of<AllFavoritesCubit>(context).getProducts();
                               prefs.setStringList('favorites', newList);
                             },
 

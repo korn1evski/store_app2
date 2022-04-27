@@ -6,4 +6,6 @@ import '../../../domain/entities/product_entity.dart';
 abstract class SwaggerRemoteDataSource{
   Future<ProductsEntity> getResultData(int currentPage);
   Future<List<CategoryEntity>> getCategoriesData();
+  Future<ProductEntity> getProductById(int id);
+  Future<List<ProductEntity>> getAllProducts();
 }

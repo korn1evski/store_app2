@@ -1,20 +1,19 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:store_app/domain/entities/product_entity.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:store_app/domain/use_cases/get_result_data_usecase.dart';
 import 'package:store_app/presentation/manager/all_products/all_products_cubit.dart';
+import 'package:store_app/presentation/manager/favorites_main/favorites_main_cubit.dart';
 import 'package:store_app/presentation/widgets/common_text.dart';
-
 import '../../data/remote/data_sources/swagger_remote_data_source_impl.dart';
 import '../../data/repositories/swagger_repository_impl.dart';
 import '../widgets/category.dart';
 import '../widgets/main_page/top_main_page.dart';
 import '../widgets/product.dart';
 import 'detail_page.dart';
+import 'package:store_app/injection_container.dart' as di;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -28,11 +27,12 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin,  Aut
   RefreshController(initialRefresh: false);
   int currentPage = 1;
   List<ProductEntity> products = [];
+  var prefs = di.sl<SharedPreferences>();
+  late var isFavorite;
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    TabController _tabController = TabController(length: 3, vsync: this);
     return Scaffold(
         body: BlocBuilder<AllProductsCubit, AllProductsState>(builder: (context, state) {
           if (state is MainLoadedState) {
@@ -150,14 +150,28 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin,  Aut
                                       MaterialPageRoute(builder: (context) => DetailPage(product: products[index]))
                                   );
                                 },
-                                child: Product(
-                                  productId: products[index].id,
-                                  imgPath: ProductEntity.properImage(products[index].category.name),
-                                  name: products[index].name,
-                                  brand: products[index].details,
-                                  price: products[index].price.toInt().toString(),
-                                ),
-                              );
+                                child: BlocConsumer(
+                                  bloc: BlocProvider.of<FavoritesMainCubit>(context),
+                                    builder: (context, state) {
+                                       isFavorite = prefs.getStringList('favorites')!.contains(products[index].id.toString())
+                                          ? true : false;
+                                      return Product(
+                                        productId: products[index].id,
+                                        imgPath: ProductEntity.properImage(products[index].category.name),
+                                        name: products[index].name,
+                                        brand: products[index].details,
+                                        price: products[index].price.toInt().toString(),
+                                        isFavorite: isFavorite,
+                                      );
+                                    },
+                                  listener: (context, state){
+                                    isFavorite =
+                                    prefs.getStringList('favorites')!.contains(products[index].id.toString())
+                                        ? true
+                                        : false;
+                                  },
+                                  ),
+                                );
                             }),
                       ),
                     ),

@@ -1,4 +1,5 @@
 import 'package:store_app/data/remote/data_sources/swagger_remote_data_source.dart';
+import 'package:store_app/data/remote/models/product_model.dart';
 import 'package:store_app/domain/entities/products.entity.dart';
 
 import '../../../domain/entities/category_entity.dart';
@@ -46,6 +47,48 @@ class SwaggerRemoteDataSourceImpl extends SwaggerRemoteDataSource {
       List<ProductEntity> list = [];
       return ProductsEntity(count: 0, totalPages: 0, perPage: 0, currentPage: 0, products: list);
     }
+  }
+
+  @override
+  Future<ProductEntity> getProductById(int id) async {
+    String apiUrl = '/products/$id';
+    http.Response response = await http.get(Uri.parse(baseUrl + apiUrl));
+
+    try {
+      if (response.statusCode == 200) {
+        final ProductEntity product = productFromJson(response.body);
+        return product;
+      } else {
+        return ProductEntity(category: CategoryEntity(name: '', icon: ''),
+            name: '',
+            details: '',
+            size: '',
+            colour: '',
+            price: 0,
+            soldCount: 0,
+            id: -1);
+      }
+    }catch(e){
+      return ProductEntity(category: CategoryEntity(name: '', icon: ''), name: '', details: '', size: '', colour: '', price: 0, soldCount: 0, id: -1);
+    }
+  }
+
+  @override
+  Future<List<ProductEntity>> getAllProducts() async{
+    const String apiUrl = '/products?page_size=100000';
+    http.Response response = await http.get(Uri.parse(baseUrl + apiUrl));
+
+    try{
+      if(response.statusCode == 200){
+        final ProductsEntity productsEntity = productsFromJson(response.body);
+        return productsEntity.products;
+      } else {
+        return <ProductEntity>[];
+      }
+    } catch(e){
+      return <ProductEntity>[];
+    }
+
   }
 
 }

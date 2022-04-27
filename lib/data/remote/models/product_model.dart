@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:store_app/data/remote/models/category_model.dart';
 import 'package:store_app/domain/entities/product_entity.dart';
+
+ProductModel productFromJson(String str) => ProductModel.fromJson(json.decode(str));
 
 class ProductModel extends ProductEntity{
   ProductModel({

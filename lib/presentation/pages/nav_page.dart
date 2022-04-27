@@ -10,7 +10,7 @@ import 'package:store_app/presentation/pages/account_page.dart';
 import '../widgets/circle_indicator.dart';
 import '../widgets/common_text.dart';
 import 'main_page.dart';
-import 'cart_page.dart';
+import 'favorites_page.dart';
 
 class NavPage extends StatefulWidget {
   const NavPage({Key? key}) : super(key: key);
@@ -52,7 +52,7 @@ class _NavPageState extends State<NavPage> with TickerProviderStateMixin {
                             child: TabBarView(
                                 controller: _tabController, children: [
                               MainPage(),
-                              CartPage(),
+                              FavoritesPage(),
                               AccountPage(),
                             ])),
                       ),
@@ -87,7 +87,7 @@ class _NavPageState extends State<NavPage> with TickerProviderStateMixin {
                               ),
                               Tab(
                                   icon: Icon(
-                                    Icons.shopping_cart_outlined,
+                                    Icons.favorite_outline,
                                     size: 20,
                                   )),
                               Tab(

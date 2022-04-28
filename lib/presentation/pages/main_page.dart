@@ -161,7 +161,11 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin,  Aut
                                           child: BlocConsumer(
                                             bloc: BlocProvider.of<FavoritesMainCubit>(context),
                                             builder: (context, state) {
-                                              isFavorite = prefs.getStringList('favorites')!.contains(products[index].id.toString())
+                                              List<String>? listString = prefs.getStringList('favorites');
+                                              if( listString == null){
+                                                listString = <String>[];
+                                              }
+                                              isFavorite = listString.contains(products[index].id.toString())
                                                   ? true : false;
                                               return Product(
                                                 productId: products[index].id,

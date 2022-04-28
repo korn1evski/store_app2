@@ -12,16 +12,24 @@ import '../favorite_circle.dart';
 class TopDetailPage extends StatefulWidget {
   final String productImg;
   final int productId;
-  const TopDetailPage({Key? key, required this.productImg, required this.productId}) : super(key: key);
+  TopDetailPage({Key? key, required this.productImg, required this.productId}) : super(key: key);
+  final prefs = di.sl<SharedPreferences>();
 
   @override
   State<TopDetailPage> createState() => _TopDetailPageState();
 }
 
 class _TopDetailPageState extends State<TopDetailPage> {
-  final prefs = di.sl<SharedPreferences>();
+
   @override
   Widget build(BuildContext context) {
+    List<String>? mayBeNullList = widget.prefs.getStringList('favorites');
+    List<String> favoritesList;
+    if(mayBeNullList == null){
+      favoritesList = <String>[];
+    } else {
+      favoritesList = mayBeNullList;
+    }
         return BlocBuilder<FavoritesMainCubit, FavoritesMainState>(
           builder: (context, state) {
             return Container(
@@ -59,15 +67,11 @@ class _TopDetailPageState extends State<TopDetailPage> {
                               )),
                           GestureDetector(
                             onTap: () async{
-                              List<String>? newList = prefs.getStringList('favorites');
-                              if(newList == null){
-                                newList = <String>[];
-                              }
-                              if(newList.contains(widget.productId.toString())){
-                                newList.remove(widget.productId.toString());
+                              if(favoritesList.contains(widget.productId.toString())){
+                                favoritesList.remove(widget.productId.toString());
                               } else {
-                                newList.add(widget.productId.toString());
-                                newList = newList.toSet().toList();
+                                favoritesList.add(widget.productId.toString());
+                                favoritesList = favoritesList.toSet().toList();
                               }
                               if(state is RefreshProductAdded){
                                 BlocProvider.of<FavoritesMainCubit>(context).refreshProductRemoved();
@@ -76,14 +80,14 @@ class _TopDetailPageState extends State<TopDetailPage> {
                               }
                               BlocProvider.of<AllFavoritesCubit>(context).loading();
                               BlocProvider.of<AllFavoritesCubit>(context).getProducts();
-                              prefs.setStringList('favorites', newList);
+                              widget.prefs.setStringList('favorites', favoritesList);
                             },
 
                             child: FavoriteCircle(
                               size: 40,
                               iconSize: 20,
-                              icon: prefs.getStringList('favorites')!.contains(widget.productId.toString()) ? Icons.star : Icons.star_outline,
-                              iconColor: prefs.getStringList('favorites')!.contains(widget.productId.toString()) ? Colors.amber : Colors.black,
+                              icon: favoritesList.contains(widget.productId.toString()) ? Icons.star : Icons.star_outline,
+                              iconColor: favoritesList.contains(widget.productId.toString()) ? Colors.amber : Colors.black,
                             ),
                           )
                         ],

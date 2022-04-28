@@ -35,14 +35,15 @@ class _FavoritesPageState extends State<FavoritesPage> {
         );
       } else if (state is ProductsLoadedState) {
         var products = state.products;
+        if(products.isNotEmpty){
         return Container(
           padding: EdgeInsets.only(left: 16, right: 16),
           child: Column(
             children: [
               Padding(
-                padding: EdgeInsets.only(top: 74, bottom: 74),
+                padding: EdgeInsets.only(top: 74, bottom: 50),
                 child: CommonText(
-                  text: 'Favorites products',
+                  text: 'Favorite products',
                   size: 18,
                   font: 'SFPRODISPLAYBOLD',
                 ),
@@ -80,7 +81,10 @@ class _FavoritesPageState extends State<FavoritesPage> {
               ),
             ],
           ),
-        );
+        );}
+        else {
+          return Center(child: Text('No favorite products yet'));
+        }
       } else {
         return Container();
       }

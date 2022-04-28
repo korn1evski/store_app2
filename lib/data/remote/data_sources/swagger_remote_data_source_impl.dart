@@ -65,11 +65,10 @@ class SwaggerRemoteDataSourceImpl extends SwaggerRemoteDataSource {
             size: '',
             colour: '',
             price: 0,
-            soldCount: 0,
             id: -1);
       }
     }catch(e){
-      return ProductEntity(category: CategoryEntity(name: '', icon: ''), name: '', details: '', size: '', colour: '', price: 0, soldCount: 0, id: -1);
+      return ProductEntity(category: CategoryEntity(name: '', icon: ''), name: '', details: '', size: '', colour: '', price: 0, id: -1);
     }
   }
 

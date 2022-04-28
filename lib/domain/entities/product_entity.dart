@@ -9,7 +9,6 @@ class ProductEntity {
     required this.size,
     required this.colour,
     required this.price,
-    required this.soldCount,
     required this.id,
   });
 
@@ -19,7 +18,6 @@ class ProductEntity {
   final String size;
   final String colour;
   final double price;
-  final int soldCount;
   final int id;
 
   static String properImage(String category){

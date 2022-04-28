@@ -11,7 +11,6 @@ class TopMainPage extends StatelessWidget {
     return Container(
         width: double.maxFinite,
         padding: EdgeInsets.only(
-          top: 74,
           left: 16,
           right: 16,
         ),

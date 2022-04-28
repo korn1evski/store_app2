@@ -62,16 +62,15 @@ class _FavoritesPageState extends State<FavoritesPage> {
                     itemBuilder: (_, index) {
                       return GestureDetector(
                           onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        DetailPage(product: products[index])));
+                            // Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //         builder: (context) =>
+                            //             DetailPage(product: products[index])));
                           },
                           child: Product(
                             productId: products[index].id,
-                            imgPath: ProductEntity.properImage(
-                                products[index].category.name),
+                            imgPath: products[index].mainImage,
                             name: products[index].name,
                             brand: products[index].details,
                             price: products[index].price.toInt().toString(),

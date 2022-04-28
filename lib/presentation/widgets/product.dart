@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:store_app/core/colors.dart';
@@ -38,7 +39,7 @@ class Product extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(4),
                 image: DecorationImage(
-                  image: AssetImage(imgPath),
+                  image: NetworkImage(imgPath),
                   fit: BoxFit.cover,
                 ),
               ),

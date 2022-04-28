@@ -4,6 +4,7 @@ import 'package:store_app/domain/entities/product_entity.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:store_app/domain/use_cases/get_result_data_usecase.dart';
 import 'package:store_app/presentation/manager/all_products/all_products_cubit.dart';
+import 'package:store_app/presentation/manager/view_models/product_viewmodel.dart';
 import 'package:store_app/presentation/manager/favorites_main/favorites_main_cubit.dart';
 import 'package:store_app/presentation/widgets/common_text.dart';
 import '../widgets/category.dart';
@@ -24,7 +25,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin,  Aut
   final RefreshController refreshController =
   RefreshController(initialRefresh: false);
   int currentPage = 1;
-  List<ProductEntity> products = [];
+  List<ProductViewModel> products = [];
   var prefs = di.sl<SharedPreferences>();
   late var isFavorite;
 
@@ -67,7 +68,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin,  Aut
                           currentPage++;
                           var productsResponse =
                           await di.sl<GetResultDataUseCase>().call(currentPage);
-                          List<ProductEntity> productsTemp = productsResponse.products;
+                          List<ProductViewModel> productsTemp = ProductViewModel.fromEntityList(productsResponse.products);
                           if (productsTemp.isNotEmpty) {
                             products.addAll(productsTemp);
                             refreshController.loadComplete();
@@ -153,10 +154,10 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin,  Aut
                                       itemBuilder: (_, index) {
                                         return GestureDetector(
                                           onTap: () {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(builder: (context) => DetailPage(product: products[index]))
-                                            );
+                                            // Navigator.push(
+                                            //     context,
+                                            //     MaterialPageRoute(builder: (context) => DetailPage(product: products[index]))
+                                            // );
                                           },
                                           child: BlocConsumer(
                                             bloc: BlocProvider.of<FavoritesMainCubit>(context),
@@ -169,7 +170,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin,  Aut
                                                   ? true : false;
                                               return Product(
                                                 productId: products[index].id,
-                                                imgPath: ProductEntity.properImage(products[index].category.name),
+                                                imgPath: products[index].mainImage,
                                                 name: products[index].name,
                                                 brand: products[index].details,
                                                 price: products[index].price.toInt().toString(),

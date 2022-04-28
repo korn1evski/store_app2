@@ -14,7 +14,8 @@ class ProductModel extends ProductEntity{
     required this.colour,
     required this.price,
     required this.id,
-  }) : super(category: CategoryModel.categoryModelToEntity(category), name: name, details: details, size: size, colour: colour, price: price, id: id);
+    required this.mainImage
+  }) : super(category: CategoryModel.categoryModelToEntity(category), name: name, details: details, size: size, colour: colour, price: price, id: id, mainImage: mainImage);
 
   CategoryModel category;
   String name;
@@ -23,6 +24,7 @@ class ProductModel extends ProductEntity{
   String colour;
   double price;
   int id;
+  String mainImage;
 
   factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
     category: CategoryModel.fromJson(json["category"]),
@@ -32,6 +34,7 @@ class ProductModel extends ProductEntity{
     colour: json["colour"],
     price: json["price"],
     id: json["id"],
+    mainImage: json["main_image"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -42,12 +45,13 @@ class ProductModel extends ProductEntity{
     "colour": colour,
     "price": price,
     "id": id,
+    "main_image" : mainImage
   };
 
   static List<ProductEntity> categoryModelsToEntity(List<ProductModel> listModels){
     List<ProductEntity> listEntities = [];
     for (var model in listModels){
-      var entity = ProductEntity(category: model.category, name: model.name, details: model.details, size: model.size, colour: model.colour, price: model.price, id: model.id);
+      var entity = ProductEntity(category: model.category, name: model.name, details: model.details, size: model.size, colour: model.colour, price: model.price, id: model.id, mainImage: model.mainImage);
       listEntities.add(entity);
     }
 

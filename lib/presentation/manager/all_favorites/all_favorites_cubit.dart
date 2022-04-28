@@ -5,13 +5,15 @@ import 'package:store_app/domain/entities/product_entity.dart';
 import 'package:store_app/domain/use_cases/get_all_products_usecase.dart';
 import 'package:store_app/injection_container.dart' as di;
 
+import '../view_models/product_viewmodel.dart';
+
 part 'all_favorites_state.dart';
 
 class AllFavoritesCubit extends Cubit<AllFavoritesState> {
   AllFavoritesCubit({required this.getAllProductsUseCase}) : super(AllFavoritesInitial());
   final GetAllProductsUseCase getAllProductsUseCase;
 
-  late var products;
+  late dynamic products;
   var prefs = di.sl<SharedPreferences>();
 
   void loading(){
@@ -21,11 +23,12 @@ class AllFavoritesCubit extends Cubit<AllFavoritesState> {
   Future<void> getProducts() async{
     try{
       products = await getAllProductsUseCase.call();
+      products = ProductViewModel.fromEntityList(products);
       List<String>? favoriteIds = prefs.getStringList('favorites');
       if(favoriteIds == null) {
-        emit(ProductsLoadedState(products: <ProductEntity>[]));
+        emit(ProductsLoadedState(products: <ProductViewModel>[]));
       } else {
-        List<ProductEntity> favoriteProducts = <ProductEntity>[];
+        List<ProductViewModel> favoriteProducts = <ProductViewModel>[];
         for (var product in products){
           if(favoriteIds.contains(product.id.toString())){
             favoriteProducts.add(product);

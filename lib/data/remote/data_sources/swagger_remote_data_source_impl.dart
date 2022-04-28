@@ -14,38 +14,45 @@ class SwaggerRemoteDataSourceImpl extends SwaggerRemoteDataSource {
   final String baseUrl = 'http://mobile-shop-api.hiring.devebs.net';
 
   @override
-  Future<List<CategoryEntity>> getCategoriesData() async{
+  Future<List<CategoryEntity>> getCategoriesData() async {
     const String apiURl = '/categories';
     http.Response response = await http.get(Uri.parse(baseUrl + apiURl));
 
-    try{
-      if (response.statusCode == 200){
+    try {
+      if (response.statusCode == 200) {
         final CategoriesModel result = CategoriesModelFromJson(response.body);
         return result.categoriesModels;
       } else {
         return <CategoryEntity>[];
       }
-    } catch(e){
+    } catch (e) {
       return <CategoryEntity>[];
     }
   }
 
   @override
-  Future<ProductsEntity> getResultData(int currentPage) async{
-    final String apiURl = "/products?page=" + currentPage.toString() + "&page_size=10";
+  Future<ProductsEntity> getResultData(int currentPage) async {
+    final String apiURl =
+        "/products?page=" + currentPage.toString() + "&page_size=10";
     http.Response response = await http.get(Uri.parse(baseUrl + apiURl));
 
-    try{
-      if (response.statusCode == 200){
+    try {
+      if (response.statusCode == 200) {
         final result = productsFromJson(response.body);
         return result;
       } else {
         List<ProductEntity> list = [];
-        return ProductsEntity(count: 0, totalPages: 0, perPage: 0, currentPage: 0, products: list);
+        return ProductsEntity(
+            count: 0,
+            totalPages: 0,
+            perPage: 0,
+            currentPage: 0,
+            products: list);
       }
-    } catch(e){
+    } catch (e) {
       List<ProductEntity> list = [];
-      return ProductsEntity(count: 0, totalPages: 0, perPage: 0, currentPage: 0, products: list);
+      return ProductsEntity(
+          count: 0, totalPages: 0, perPage: 0, currentPage: 0, products: list);
     }
   }
 
@@ -59,35 +66,43 @@ class SwaggerRemoteDataSourceImpl extends SwaggerRemoteDataSource {
         final ProductEntity product = productFromJson(response.body);
         return product;
       } else {
-        return ProductEntity(category: CategoryEntity(name: '', icon: ''),
+        return ProductEntity(
+            category: CategoryEntity(name: '', icon: ''),
             name: '',
             details: '',
             size: '',
             colour: '',
             price: 0,
-            id: -1);
+            id: -1,
+            mainImage: '');
       }
-    }catch(e){
-      return ProductEntity(category: CategoryEntity(name: '', icon: ''), name: '', details: '', size: '', colour: '', price: 0, id: -1);
+    } catch (e) {
+      return ProductEntity(
+          category: CategoryEntity(name: '', icon: ''),
+          name: '',
+          details: '',
+          size: '',
+          colour: '',
+          price: 0,
+          id: -1,
+          mainImage: '');
     }
   }
 
   @override
-  Future<List<ProductEntity>> getAllProducts() async{
+  Future<List<ProductEntity>> getAllProducts() async {
     const String apiUrl = '/products?page_size=100000';
     http.Response response = await http.get(Uri.parse(baseUrl + apiUrl));
 
-    try{
-      if(response.statusCode == 200){
+    try {
+      if (response.statusCode == 200) {
         final ProductsEntity productsEntity = productsFromJson(response.body);
         return productsEntity.products;
       } else {
         return <ProductEntity>[];
       }
-    } catch(e){
+    } catch (e) {
       return <ProductEntity>[];
     }
-
   }
-
 }

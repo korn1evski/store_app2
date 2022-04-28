@@ -5,6 +5,7 @@ import 'package:store_app/domain/entities/product_entity.dart';
 import 'package:store_app/domain/entities/products.entity.dart';
 import 'package:store_app/domain/use_cases/get_categories_data_usecase.dart';
 import 'package:store_app/domain/use_cases/get_result_data_usecase.dart';
+import 'package:store_app/presentation/manager/view_models/product_viewmodel.dart';
 
 part 'all_products_state.dart';
 
@@ -14,7 +15,7 @@ class AllProductsCubit extends Cubit<AllProductsState> {
 
   final GetCategoriesDataUseCase getCategoriesDataUseCase;
   final GetResultDataUseCase getResultDataUseCase;
-  late final products;
+  late final productsEntity;
   late final categories;
   late final totalPages;
   int currentPage = 1;
@@ -25,16 +26,21 @@ class AllProductsCubit extends Cubit<AllProductsState> {
 
   Future<void> getInfoMain() async{
     try{
-      products = await getResultDataUseCase.call(currentPage);
+      productsEntity = await getResultDataUseCase.call(currentPage);
       categories = await getCategoriesDataUseCase.call();
-      totalPages = products.totalPages;
-      emit(MainLoadedState(products: products.products, currentPage: currentPage, totalPages: products.totalPages, categories: categories));
+      totalPages = productsEntity.totalPages;
+      List<ProductViewModel> products = [];
+      for(var productEntity in productsEntity.products){
+        products.add(ProductViewModel(id: productEntity.id, mainImage: productEntity.mainImage, name: productEntity.name, details: productEntity.details, price: productEntity.price));
+      }
+
+      emit(MainLoadedState(products: products, currentPage: currentPage, totalPages: totalPages, categories: categories));
     } catch(e) {
 
     }
   }
 
-  void refreshedMain(List<ProductEntity> products, currentPage){
+  void refreshedMain(List<ProductViewModel> products, currentPage){
     emit(MainLoadedState(products: products, currentPage: currentPage, totalPages: totalPages, categories: categories));
   }
 

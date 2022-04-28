@@ -10,6 +10,7 @@ class ProductEntity {
     required this.colour,
     required this.price,
     required this.id,
+    required this.mainImage
   });
 
   final CategoryEntity category;
@@ -19,6 +20,7 @@ class ProductEntity {
   final String colour;
   final double price;
   final int id;
+  final String mainImage;
 
   static String properImage(String category){
     if (category.startsWith('Electronics')){

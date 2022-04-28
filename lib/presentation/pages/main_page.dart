@@ -154,10 +154,10 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin,  Aut
                                       itemBuilder: (_, index) {
                                         return GestureDetector(
                                           onTap: () {
-                                            // Navigator.push(
-                                            //     context,
-                                            //     MaterialPageRoute(builder: (context) => DetailPage(product: products[index]))
-                                            // );
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(builder: (context) => DetailPage(productId: products[index].id))
+                                            );
                                           },
                                           child: BlocConsumer(
                                             bloc: BlocProvider.of<FavoritesMainCubit>(context),
@@ -175,6 +175,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin,  Aut
                                                 brand: products[index].details,
                                                 price: products[index].price.toInt().toString(),
                                                 isFavorite: isFavorite,
+                                                isVisible: true,
                                               );
                                             },
                                             listener: (context, state){

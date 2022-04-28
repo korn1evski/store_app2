@@ -1,39 +1,62 @@
-
-
 import 'package:flutter/material.dart';
-import 'package:store_app/domain/entities/product_entity.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:store_app/presentation/manager/detail_page/detail_page_cubit.dart';
 import 'package:store_app/presentation/widgets/detail_page/bottom_detail_page.dart';
 import '../widgets/detail_page/content_detail_page.dart';
 import '../widgets/detail_page/top_detail_page.dart';
 
-class DetailPage extends StatelessWidget {
-  final ProductEntity product;
+class DetailPage extends StatefulWidget {
+  final productId;
 
-  const DetailPage({Key? key, required this.product}) : super(key: key);
+  const DetailPage({Key? key, required this.productId}) : super(key: key);
 
   @override
+  State<DetailPage> createState() => _DetailPageState();
+}
+
+class _DetailPageState extends State<DetailPage> {
+
+  @override
+  void initState() {
+
+    super.initState();
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      BlocProvider.of<DetailPageCubit>(context).loading();
+      BlocProvider.of<DetailPageCubit>(context).getProduct(widget.productId);
+    });
+  }
+  @override
   Widget build(BuildContext context) {
-             return Scaffold(
-               body: Column(
-                 children: [
-                   Expanded(
-                     child: SingleChildScrollView(
-                       scrollDirection: Axis.vertical,
-                       child: Column(
-                         children: [
-                           TopDetailPage(productImg: ProductEntity.properImage(
-                               product.category.name), productId: product.id),
-                           ContentDetailPage(productName: product.name,
-                               productSize: product.size,
-                               productColor: product.colour,
-                               productDetails: product.details)
-                         ],
-                       ),
+             return BlocBuilder<DetailPageCubit, DetailPageState>(
+               builder: (context, state) {
+                 if (state is LoadingDetailState){
+                   return Center(child: CircularProgressIndicator(),);
+                 } else if(state is ProductLoadedState){
+                   return Scaffold(
+                     body: Column(
+                       children: [
+                         Expanded(
+                           child: SingleChildScrollView(
+                             scrollDirection: Axis.vertical,
+                             child: Column(
+                               children: [
+                                 TopDetailPage(productImg: state.product.mainImage, productId: state.product.id, images: state.product.images),
+                                 ContentDetailPage(productName: state.product.name,
+                                     productSize: state.product.size,
+                                     productColor: state.product.colour,
+                                     productDetails: state.product.details)
+                               ],
+                             ),
+                           ),
+                         ),
+                         BottomDetailPage(productPrice: state.product.price,)
+                       ],
                      ),
-                   ),
-                   BottomDetailPage(productPrice: product.price,)
-                 ],
-               ),
+                   );
+                 } else {
+                   return Center(child: Text('Something went wrong'),);
+                 }
+               }
              );
   }
 }

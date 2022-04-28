@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:store_app/core/colors.dart';
-import 'package:store_app/presentation/manager/favorites_main/favorites_main_cubit.dart';
 import 'package:store_app/presentation/widgets/common_text.dart';
 
 import 'favorite_circle.dart';
@@ -14,6 +13,7 @@ class Product extends StatelessWidget {
   final String price;
   final int productId;
   final bool isFavorite;
+  final bool isVisible;
 
   const Product(
       {Key? key,
@@ -22,7 +22,9 @@ class Product extends StatelessWidget {
         required this.brand,
         required this.imgPath,
         required this.productId,
-        required this.isFavorite})
+        required this.isFavorite,
+        required this.isVisible
+      })
       : super(key: key);
 
   @override
@@ -47,9 +49,12 @@ class Product extends StatelessWidget {
             Positioned(
                 top: 0,
                 right: 0,
-                child: FavoriteCircle(
-                  icon: isFavorite ? Icons.star : Icons.star_outline,
-                  iconColor: isFavorite ? Colors.amber : Colors.black,
+                child: Visibility(
+                  visible: isVisible,
+                  child: FavoriteCircle(
+                    icon: isFavorite ? Icons.star : Icons.star_outline,
+                    iconColor: isFavorite ? Colors.amber : Colors.black,
+                  ),
                 )),
           ],
         ),

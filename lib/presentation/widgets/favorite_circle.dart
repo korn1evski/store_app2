@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:store_app/core/colors.dart';
 
 class FavoriteCircle extends StatelessWidget {
 
@@ -20,7 +21,8 @@ class FavoriteCircle extends StatelessWidget {
         height: size,
         decoration: BoxDecoration(
           color: backColor,
-          borderRadius: BorderRadius.circular(25)
+          borderRadius: BorderRadius.circular(25),
+          border: Border.all(width: 0.5 , color: AppColors.grey3),
         ),
         child: Center(
             child: Icon(icon, size: iconSize, color: iconColor),

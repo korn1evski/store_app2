@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:store_app/presentation/manager/all_favorites/all_favorites_cubit.dart';
 import 'package:store_app/presentation/manager/all_products/all_products_cubit.dart';
+import 'package:store_app/presentation/manager/detail_page/detail_page_cubit.dart';
 import 'package:store_app/presentation/manager/favorites_main/favorites_main_cubit.dart';
+import 'package:store_app/presentation/pages/detail_page.dart';
 import 'package:store_app/presentation/pages/nav_page.dart';
 import 'injection_container.dart' as di;
 
@@ -26,7 +28,8 @@ class MyApp extends StatelessWidget {
             create: (context) => di.sl<FavoritesMainCubit>(),
           ),
           BlocProvider<AllFavoritesCubit>(
-              create: (_) => di.sl<AllFavoritesCubit>())
+              create: (_) => di.sl<AllFavoritesCubit>()),
+          BlocProvider<DetailPageCubit>(create: (_) => di.sl<DetailPageCubit>())
         ],
         child: MaterialApp(
             debugShowCheckedModeBanner: false,

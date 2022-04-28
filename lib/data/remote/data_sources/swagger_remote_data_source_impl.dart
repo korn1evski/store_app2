@@ -1,12 +1,11 @@
 import 'package:store_app/data/remote/data_sources/swagger_remote_data_source.dart';
-import 'package:store_app/data/remote/models/product_model.dart';
+import 'package:store_app/data/remote/models/id_product_model.dart';
+import 'package:store_app/domain/entities/id_product_entity.dart';
 import 'package:store_app/domain/entities/products.entity.dart';
 
 import '../../../domain/entities/category_entity.dart';
 import '../../../domain/entities/product_entity.dart';
-
 import 'package:http/http.dart' as http;
-
 import '../models/categories_model.dart';
 import '../models/products_model.dart';
 
@@ -57,16 +56,16 @@ class SwaggerRemoteDataSourceImpl extends SwaggerRemoteDataSource {
   }
 
   @override
-  Future<ProductEntity> getProductById(int id) async {
+  Future<IdProductEntity> getProductById(int id) async {
     String apiUrl = '/products/$id';
     http.Response response = await http.get(Uri.parse(baseUrl + apiUrl));
 
     try {
       if (response.statusCode == 200) {
-        final ProductEntity product = productFromJson(response.body);
-        return product;
+        final idProductEntity = idProductFromJson(response.body);
+        return idProductEntity;
       } else {
-        return ProductEntity(
+        return IdProductEntity(
             category: CategoryEntity(name: '', icon: ''),
             name: '',
             details: '',
@@ -74,10 +73,11 @@ class SwaggerRemoteDataSourceImpl extends SwaggerRemoteDataSource {
             colour: '',
             price: 0,
             id: -1,
-            mainImage: '');
+            mainImage: '',
+            images: <ImageWrapper>[]);
       }
     } catch (e) {
-      return ProductEntity(
+      return IdProductEntity(
           category: CategoryEntity(name: '', icon: ''),
           name: '',
           details: '',
@@ -85,7 +85,8 @@ class SwaggerRemoteDataSourceImpl extends SwaggerRemoteDataSource {
           colour: '',
           price: 0,
           id: -1,
-          mainImage: '');
+          mainImage: '',
+          images: <ImageWrapper>[]);
     }
   }
 

@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:store_app/presentation/manager/all_favorites/all_favorites_cubit.dart';
 import 'package:store_app/presentation/widgets/common_text.dart';
-
-import '../../domain/entities/product_entity.dart';
 import '../widgets/product.dart';
 import 'detail_page.dart';
 
@@ -62,11 +60,11 @@ class _FavoritesPageState extends State<FavoritesPage> {
                     itemBuilder: (_, index) {
                       return GestureDetector(
                           onTap: () {
-                            // Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //         builder: (context) =>
-                            //             DetailPage(product: products[index])));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        DetailPage(productId: products[index].id)));
                           },
                           child: Product(
                             productId: products[index].id,
@@ -75,6 +73,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
                             brand: products[index].details,
                             price: products[index].price.toInt().toString(),
                             isFavorite: true,
+                            isVisible: false,
                           ));
                     }),
               ),

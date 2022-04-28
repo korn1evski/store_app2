@@ -1,5 +1,6 @@
 
 import 'package:store_app/domain/entities/category_entity.dart';
+import 'package:store_app/domain/entities/id_product_entity.dart';
 import 'package:store_app/domain/entities/product_entity.dart';
 
 import '../entities/products.entity.dart';
@@ -7,6 +8,6 @@ import '../entities/products.entity.dart';
 abstract class SwaggerRepository {
   Future<ProductsEntity> getResultData(int currentPage);
   Future<List<CategoryEntity>> getCategoriesData();
-  Future<ProductEntity> getProductById(int id);
+  Future<IdProductEntity> getProductById(int id);
   Future<List<ProductEntity>> getAllProducts();
 }

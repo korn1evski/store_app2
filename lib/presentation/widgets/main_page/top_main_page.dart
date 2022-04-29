@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:store_app/core/colors.dart';
 
+import '../../pages/search_page.dart';
+
 class TopMainPage extends StatelessWidget {
   const TopMainPage({Key? key}) : super(key: key);
 
@@ -24,18 +26,26 @@ class TopMainPage extends StatelessWidget {
                 color: AppColors.grey1,
                 borderRadius: BorderRadius.circular(45),
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: const [
-                  Padding(
-                    padding:
-                    EdgeInsets.only(left: 20, top: 11, bottom: 14),
-                    child: Icon(
-                      Icons.search,
-                      size: 20,
+              child: InkWell(
+                onTap: (){
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SearchPage())
+                  );
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: const [
+                    Padding(
+                      padding:
+                      EdgeInsets.only(left: 20, top: 11, bottom: 14),
+                      child: Icon(
+                        Icons.search,
+                        size: 20,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             Container(

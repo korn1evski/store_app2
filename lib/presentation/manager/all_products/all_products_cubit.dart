@@ -1,8 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:store_app/domain/entities/category_entity.dart';
-import 'package:store_app/domain/entities/product_entity.dart';
-import 'package:store_app/domain/entities/products.entity.dart';
 import 'package:store_app/domain/use_cases/get_categories_data_usecase.dart';
 import 'package:store_app/domain/use_cases/get_result_data_usecase.dart';
 import 'package:store_app/presentation/manager/view_models/product_viewmodel.dart';
@@ -19,6 +18,7 @@ class AllProductsCubit extends Cubit<AllProductsState> {
   late final categories;
   late final totalPages;
   int currentPage = 1;
+
 
   void loading(){
     emit(MainLoadingState());
@@ -59,5 +59,27 @@ class AllProductsCubit extends Cubit<AllProductsState> {
     }
   }
 
+  void loadingRefresher(List<ProductViewModel> products, int currentPage, RefreshController controller){
+    if (currentPage >= totalPages) {
+      controller.loadNoData();
+      return;
+    } else {
+      controller.loadComplete();
+      currentPage++;
+      refreshedMain(products, currentPage);
+    }
+  }
+
+  void refreshRefresher(List<ProductViewModel> products, int currentPage, RefreshController controller){
+    if (products.isNotEmpty) {
+      currentPage = 1;
+      products.length = 10;
+      controller.refreshCompleted();
+      controller.resetNoData();
+      refreshedMain(products, currentPage);
+    } else {
+      controller.refreshFailed();
+    }
+  }
 
 }

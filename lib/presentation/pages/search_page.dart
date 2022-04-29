@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:store_app/core/colors.dart';
-import 'package:store_app/presentation/manager/all_products/all_products_cubit.dart';
 import 'package:store_app/presentation/manager/search_page/search_page_cubit.dart';
 
 import '../widgets/product.dart';
@@ -29,7 +28,6 @@ class _SearchPageState extends State<SearchPage> {
   late var products;
   bool show = false;
   bool isAnyResult = false;
-  FocusNode focusNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -71,10 +69,7 @@ class _SearchPageState extends State<SearchPage> {
             ),
           ),
         ),
-        body:   Builder(
-          builder: (context) {
-            if(show && isAnyResult) {
-              return Padding(
+        body:  show? Padding(
                 padding: EdgeInsets.only(left: 16, right: 16, top: 10),
                 child: GridView.builder(
                     itemCount: products.length,
@@ -106,15 +101,8 @@ class _SearchPageState extends State<SearchPage> {
                             isVisible: false,
                           ));
                     }),
-              );
-            } else if (!isAnyResult){
-              return Center(child: Text('No result'),);
-            } else {
-              return Center(child: Text('Search'),);
-            }
-          }
-        ),
-      );
+              ) : Center(child: Text('Search'),)
+        );
     });
   }
 }

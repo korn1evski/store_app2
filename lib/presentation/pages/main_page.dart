@@ -51,37 +51,11 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin,  Aut
                       enablePullUp: true,
                       controller: refreshController,
                       onRefresh: () async {
-                        if (products.isNotEmpty) {
-                          currentPage = 1;
-                          products.length = 10;
-                          refreshController.refreshCompleted();
-                          refreshController.resetNoData();
                           BlocProvider.of<AllProductsCubit>(context)
-                              .refreshedMain(products, currentPage);
-                        } else {
-                          refreshController.refreshFailed();
-                        }
+                              .refreshRefresher(products, currentPage, refreshController);
                       },
                       onLoading: () async {
-                        if (currentPage >= totalPages) {
-                          refreshController.loadNoData();
-                          return;
-                        } else {
-                          refreshController.loadComplete();
-                          currentPage++;
-                          BlocProvider.of<AllProductsCubit>(context).refreshedMain(products, currentPage);
-                          // var productsResponse =
-                          // await di.sl<GetResultDataUseCase>().call(currentPage);
-                          // List<ProductViewModel> productsTemp = ProductViewModel.fromEntityList(productsResponse.products);
-                          // if (productsTemp.isNotEmpty) {
-                          //   products.addAll(productsTemp);
-                          //   refreshController.loadComplete();
-                          //   BlocProvider.of<AllProductsCubit>(context)
-                          //       .refreshedMain(products, currentPage);
-                          // } else {
-                          //   refreshController.loadFailed();
-                          // }
-                        }
+                          BlocProvider.of<AllProductsCubit>(context).loadingRefresher(products, currentPage, refreshController);
                       },
                       child: ListView(
                         shrinkWrap: true,

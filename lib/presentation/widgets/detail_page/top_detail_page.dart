@@ -33,15 +33,6 @@ class _TopDetailPageState extends State<TopDetailPage> {
   List<String> imgList = [];
   final _controller = PageController();
 
-  bool verifyImage(String url) {
-    try {
-      NetworkImage(url);
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     imgList.add(widget.productImg);

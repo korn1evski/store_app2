@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:store_app/domain/entities/product_entity.dart';
+import 'package:store_app/domain/entities/category_entity.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:store_app/domain/use_cases/get_result_data_usecase.dart';
 import 'package:store_app/presentation/manager/all_products/all_products_cubit.dart';
 import 'package:store_app/presentation/manager/view_models/product_viewmodel.dart';
 import 'package:store_app/presentation/manager/favorites_main/favorites_main_cubit.dart';
@@ -24,10 +23,12 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> with TickerProviderStateMixin,  AutomaticKeepAliveClientMixin{
   final RefreshController refreshController =
   RefreshController(initialRefresh: false);
-  int currentPage = 1;
+  late int currentPage;
   List<ProductViewModel> products = [];
   var prefs = di.sl<SharedPreferences>();
+  late var totalPages;
   late var isFavorite;
+  late List<CategoryEntity> categories;
 
   @override
   Widget build(BuildContext context) {
@@ -35,10 +36,11 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin,  Aut
     return Scaffold(
         body: BlocBuilder<AllProductsCubit, AllProductsState>(builder: (context, state) {
           if (state is MainLoadedState) {
-            var totalPages = state.totalPages;
-            if (currentPage == 1) {
-              products = state.products;
-            }
+            totalPages = state.totalPages;
+            products = state.products;
+            categories = state.categories;
+            currentPage = state.currentPage;
+          }
             return Column(
               children: [
                 Container(height: 74,),
@@ -65,18 +67,20 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin,  Aut
                           refreshController.loadNoData();
                           return;
                         } else {
+                          refreshController.loadComplete();
                           currentPage++;
-                          var productsResponse =
-                          await di.sl<GetResultDataUseCase>().call(currentPage);
-                          List<ProductViewModel> productsTemp = ProductViewModel.fromEntityList(productsResponse.products);
-                          if (productsTemp.isNotEmpty) {
-                            products.addAll(productsTemp);
-                            refreshController.loadComplete();
-                            BlocProvider.of<AllProductsCubit>(context)
-                                .refreshedMain(products, currentPage);
-                          } else {
-                            refreshController.loadFailed();
-                          }
+                          BlocProvider.of<AllProductsCubit>(context).refreshedMain(products, currentPage);
+                          // var productsResponse =
+                          // await di.sl<GetResultDataUseCase>().call(currentPage);
+                          // List<ProductViewModel> productsTemp = ProductViewModel.fromEntityList(productsResponse.products);
+                          // if (productsTemp.isNotEmpty) {
+                          //   products.addAll(productsTemp);
+                          //   refreshController.loadComplete();
+                          //   BlocProvider.of<AllProductsCubit>(context)
+                          //       .refreshedMain(products, currentPage);
+                          // } else {
+                          //   refreshController.loadFailed();
+                          // }
                         }
                       },
                       child: ListView(
@@ -107,13 +111,13 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin,  Aut
                                 height: 105,
                                 child: ListView.builder(
                                     scrollDirection: Axis.horizontal,
-                                    itemCount: state.categories.length,
+                                    itemCount: categories.length,
                                     itemBuilder: (_, index) {
                                       return Padding(
                                         padding: const EdgeInsets.only(right: 20),
                                         child: CategoryWidget(
-                                          text: state.categories[index].name,
-                                          iconImg: state.categories[index].icon,
+                                          text: categories[index].name,
+                                          iconImg: categories[index].icon,
                                         ),
                                       );
                                     }),
@@ -198,9 +202,6 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin,  Aut
                 ),
               ],
             );
-          } else {
-            return Container();
-          }
         }));
   }
   @override

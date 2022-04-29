@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -32,6 +33,15 @@ class _TopDetailPageState extends State<TopDetailPage> {
   List<String> imgList = [];
   final _controller = PageController();
 
+  bool verifyImage(String url) {
+    try {
+      NetworkImage(url);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     imgList.add(widget.productImg);
@@ -56,14 +66,23 @@ class _TopDetailPageState extends State<TopDetailPage> {
                 controller: _controller,
                 itemCount: imgList.length,
                 itemBuilder: (_, index) {
-                  return Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 477,
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                      image: NetworkImage(imgList[index]),
-                      fit: BoxFit.cover,
-                    )),
+                  return CachedNetworkImage(
+                    imageUrl: imgList[index],
+                    imageBuilder: (context, imageProvider) {
+                      return Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: 477,
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                          image: imageProvider,
+                          fit: BoxFit.cover,
+                        )),
+                      );
+                    },
+                    errorWidget: (context, url, error) => Padding(
+                      padding: const EdgeInsets.only(left: 15),
+                      child: Icon(Icons.error, size: 40,),
+                    ),
                   );
                 }),
             Positioned(

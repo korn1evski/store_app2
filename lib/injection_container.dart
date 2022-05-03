@@ -12,6 +12,7 @@ import 'package:store_app/presentation/manager/all_favorites/all_favorites_cubit
 import 'package:store_app/presentation/manager/all_products/all_products_cubit.dart';
 import 'package:store_app/presentation/manager/detail_page/detail_page_cubit.dart';
 import 'package:store_app/presentation/manager/favorites_main/favorites_main_cubit.dart';
+import 'package:store_app/presentation/manager/guest_review/guest_review_cubit.dart';
 import 'package:store_app/presentation/manager/search_page/search_page_cubit.dart';
 
 GetIt sl = GetIt.instance;
@@ -25,6 +26,7 @@ Future<void> init() async {
   sl.registerFactory<AllProductsCubit>(() => AllProductsCubit(getCategoriesDataUseCase: sl.call(), getResultDataUseCase: sl.call()));
   sl.registerFactory<FavoritesMainCubit>(() => FavoritesMainCubit());
   sl.registerFactory<DetailPageCubit>(() => DetailPageCubit(getProductByIdUseCase: sl.call()));
+  sl.registerFactory<GuestReviewCubit>(() => GuestReviewCubit());
 
   sl.registerLazySingleton<SharedPreferences>(() => prefs);
 

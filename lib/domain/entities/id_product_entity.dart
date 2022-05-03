@@ -11,7 +11,8 @@ class IdProductEntity {
     required this.price,
     required this.id,
     required this.mainImage,
-    required this.images
+    required this.images,
+    required this.reviews
   });
 
   final CategoryEntity category;
@@ -23,6 +24,7 @@ class IdProductEntity {
   final int id;
   final String mainImage;
   final List<ImageWrapper> images;
+  final List<Review> reviews;
 
   static String properImage(String category){
     if (category.startsWith('Electronics')){

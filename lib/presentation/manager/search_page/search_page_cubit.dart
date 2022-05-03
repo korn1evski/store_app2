@@ -29,7 +29,7 @@ class SearchPageCubit extends Cubit<SearchPageState> {
       }
     }
 
-    bool isAnyResult = products.isNotEmpty;
+    bool isAnyResult = !products.isEmpty;
 
     emit(SearchState(products: tempProducts, isAnyResult: isAnyResult));
   }

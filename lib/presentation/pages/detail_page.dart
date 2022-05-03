@@ -15,48 +15,59 @@ class DetailPage extends StatefulWidget {
 }
 
 class _DetailPageState extends State<DetailPage> {
-
   @override
   void initState() {
-
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       BlocProvider.of<DetailPageCubit>(context).loading();
       BlocProvider.of<DetailPageCubit>(context).getProduct(widget.productId);
     });
   }
+
   @override
   Widget build(BuildContext context) {
-             return BlocBuilder<DetailPageCubit, DetailPageState>(
-               builder: (context, state) {
-                 if (state is LoadingDetailState){
-                   return Center(child: CircularProgressIndicator(),);
-                 } else if(state is ProductLoadedState){
-                   return Scaffold(
-                     body: Column(
-                       children: [
-                         Expanded(
-                           child: SingleChildScrollView(
-                             scrollDirection: Axis.vertical,
-                             child: Column(
-                               children: [
-                                 TopDetailPage(productImg: state.product.mainImage, productId: state.product.id, images: state.product.images),
-                                 ContentDetailPage(productName: state.product.name,
-                                     productSize: state.product.size,
-                                     productColor: state.product.colour,
-                                     productDetails: state.product.details)
-                               ],
-                             ),
-                           ),
-                         ),
-                         BottomDetailPage(productPrice: state.product.price,)
-                       ],
-                     ),
-                   );
-                 } else {
-                   return Center(child: Text('Something went wrong'),);
-                 }
-               }
-             );
+    return BlocBuilder<DetailPageCubit, DetailPageState>(
+        builder: (context, state) {
+      if (state is LoadingDetailState) {
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      } else if (state is ProductLoadedState) {
+        return Scaffold(
+          body: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: Column(
+                    children: [
+                      TopDetailPage(
+                          productImg: state.product.mainImage,
+                          productId: state.product.id,
+                          images: state.product.images),
+                      ContentDetailPage(
+                        productId: state.product.id,
+                        productName: state.product.name,
+                        productSize: state.product.size,
+                        productColor: state.product.colour,
+                        productDetails: state.product.details,
+                        reviews: state.product.reviews,
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              BottomDetailPage(
+                productPrice: state.product.price,
+              )
+            ],
+          ),
+        );
+      } else {
+        return Center(
+          child: Text('Something went wrong'),
+        );
+      }
+    });
   }
 }

@@ -74,7 +74,9 @@ class SwaggerRemoteDataSourceImpl extends SwaggerRemoteDataSource {
             price: 0,
             id: -1,
             mainImage: '',
-            images: <ImageWrapper>[]);
+            images: <ImageWrapper>[],
+            reviews: <Review>[]
+        );
       }
     } catch (e) {
       return IdProductEntity(
@@ -86,7 +88,9 @@ class SwaggerRemoteDataSourceImpl extends SwaggerRemoteDataSource {
           price: 0,
           id: -1,
           mainImage: '',
-          images: <ImageWrapper>[]);
+          images: <ImageWrapper>[],
+          reviews: <Review>[]
+      );
     }
   }
 

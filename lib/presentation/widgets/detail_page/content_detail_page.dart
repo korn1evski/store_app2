@@ -1,21 +1,29 @@
+import 'package:flutter/material.dart';
+import 'package:readmore/readmore.dart';
+import 'package:store_app/core/colors.dart';
+import 'package:store_app/presentation/pages/guest_form_page.dart';
+import 'package:store_app/presentation/widgets/detail_page/review_widget.dart';
 
-import 'package:flutter/cupertino.dart';
-
+import '../../../data/remote/models/id_product_model.dart';
 import '../common_text.dart';
 import '../oval_info.dart';
 
 class ContentDetailPage extends StatelessWidget {
+  final int productId;
   final String productName;
   final String productSize;
   final String productColor;
   final String productDetails;
+  final List<Review> reviews;
 
   const ContentDetailPage(
       {Key? key,
+      required this.productId,
       required this.productName,
       required this.productSize,
       required this.productColor,
-      required this.productDetails})
+      required this.productDetails,
+      required this.reviews})
       : super(key: key);
 
   @override
@@ -51,11 +59,58 @@ class ContentDetailPage extends StatelessWidget {
               font: 'SFPRODISPLAYBOLD',
             ),
           ),
+          ReadMoreText(
+            productDetails,
+            trimLines: 2,
+            colorClickableText: AppColors.green1,
+            trimMode: TrimMode.Line,
+            trimCollapsedText: 'Read more',
+            trimExpandedText: 'Read less',
+            moreStyle: TextStyle(
+                fontSize: 14,
+                height: 2,
+                fontFamily: 'SFPRODISPLAYREGULAR',
+                color: AppColors.green1),
+            style: TextStyle(
+                fontSize: 14,
+                height: 2,
+                fontFamily: 'SFPRODISPLAYREGULAR',
+                color: Colors.black),
+          ),
+          SizedBox(
+            height: 44,
+          ),
           CommonText(
-            text: productDetails,
-            size: 14,
-            lineHeight: 2,
-          )
+            text: 'Reviews',
+            size: 18,
+            font: 'SFPRODISPLAYBOLD',
+          ),
+          GestureDetector(
+            onTap: (){
+              Navigator.push(context, MaterialPageRoute(builder: (context) => GuestFormPage(productId: productId,)));
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(top: 8, bottom: 0),
+              child: CommonText(
+                text: 'Write your',
+                size: 14,
+                color: AppColors.green1,
+              ),
+            ),
+          ),
+          ListView.builder(
+              padding: EdgeInsets.only(bottom: 32),
+              itemCount: reviews.length,
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemBuilder: (_, index) {
+                return ReviewWidget(
+                    firstName: reviews[index].firstName,
+                    lastName: reviews[index].lastName,
+                    image: reviews[index].image,
+                    startCount: reviews[index].rating,
+                    message: reviews[index].message);
+              }),
         ],
       ),
     );

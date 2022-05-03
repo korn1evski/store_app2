@@ -69,7 +69,7 @@ class _SearchPageState extends State<SearchPage> {
             ),
           ),
         ),
-        body:  show? Padding(
+        body:  (show && isAnyResult) ? Padding(
                 padding: EdgeInsets.only(left: 16, right: 16, top: 10),
                 child: GridView.builder(
                     itemCount: products.length,
@@ -101,7 +101,7 @@ class _SearchPageState extends State<SearchPage> {
                             isVisible: false,
                           ));
                     }),
-              ) : Center(child: Text('Search'),)
+              ) : isAnyResult ? Center(child: Text('No results'),) : Center(child: Text('Search'),)
         );
     });
   }

@@ -7,4 +7,5 @@ class AppColors {
   static final Color shadow = Color.fromRGBO(36, 36, 36, 0.05);
   static final Color grey2 = Color.fromRGBO(146, 146, 146, 1);
   static final Color grey3 = Color.fromRGBO(235, 235, 235, 1);
+  static final Color yellow1 = Color.fromRGBO(235, 227, 0, 1);
 }

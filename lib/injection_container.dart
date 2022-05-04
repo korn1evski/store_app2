@@ -8,6 +8,7 @@ import 'package:store_app/domain/use_cases/get_all_products_usecase.dart';
 import 'package:store_app/domain/use_cases/get_categories_data_usecase.dart';
 import 'package:store_app/domain/use_cases/get_product_by_id_usecase.dart';
 import 'package:store_app/domain/use_cases/get_result_data_usecase.dart';
+import 'package:store_app/domain/use_cases/send_review_usecase.dart';
 import 'package:store_app/presentation/manager/all_favorites/all_favorites_cubit.dart';
 import 'package:store_app/presentation/manager/all_products/all_products_cubit.dart';
 import 'package:store_app/presentation/manager/detail_page/detail_page_cubit.dart';
@@ -25,8 +26,8 @@ Future<void> init() async {
   sl.registerFactory<AllFavoritesCubit>(() => AllFavoritesCubit(getAllProductsUseCase: sl.call()));
   sl.registerFactory<AllProductsCubit>(() => AllProductsCubit(getCategoriesDataUseCase: sl.call(), getResultDataUseCase: sl.call()));
   sl.registerFactory<FavoritesMainCubit>(() => FavoritesMainCubit());
-  sl.registerFactory<DetailPageCubit>(() => DetailPageCubit(getProductByIdUseCase: sl.call()));
-  sl.registerFactory<GuestReviewCubit>(() => GuestReviewCubit());
+  sl.registerFactory<DetailPageCubit>(() => DetailPageCubit(getProductByIdUseCase: sl.call(), sendReviewUseCase: sl.call()));
+  sl.registerFactory<GuestReviewCubit>(() => GuestReviewCubit(sendReviewUseCase: sl.call()));
 
   sl.registerLazySingleton<SharedPreferences>(() => prefs);
 
@@ -34,6 +35,7 @@ Future<void> init() async {
   sl.registerLazySingleton<GetCategoriesDataUseCase>(() => GetCategoriesDataUseCase(repository: sl.call()));
   sl.registerLazySingleton<GetAllProductsUseCase>(() => GetAllProductsUseCase(repository: sl.call()));
   sl.registerLazySingleton<GetProductByIdUseCase>(() => GetProductByIdUseCase(repository: sl.call()));
+  sl.registerLazySingleton<SendReviewUseCase>(() => SendReviewUseCase(repository: sl.call()));
 
 
 

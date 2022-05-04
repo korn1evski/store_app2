@@ -75,8 +75,7 @@ class SwaggerRemoteDataSourceImpl extends SwaggerRemoteDataSource {
             id: -1,
             mainImage: '',
             images: <ImageWrapper>[],
-            reviews: <Review>[]
-        );
+            reviews: <Review>[]);
       }
     } catch (e) {
       return IdProductEntity(
@@ -89,8 +88,7 @@ class SwaggerRemoteDataSourceImpl extends SwaggerRemoteDataSource {
           id: -1,
           mainImage: '',
           images: <ImageWrapper>[],
-          reviews: <Review>[]
-      );
+          reviews: <Review>[]);
     }
   }
 
@@ -108,6 +106,30 @@ class SwaggerRemoteDataSourceImpl extends SwaggerRemoteDataSource {
       }
     } catch (e) {
       return <ProductEntity>[];
+    }
+  }
+
+  @override
+  Future<void> sendReview(
+      {required int id,
+      required String firstName,
+      required String lastName,
+      required int rating,
+      required String message}) async {
+    String apiUrl = '/products/$id/add-review';
+
+    try {
+      final response = await http.post(Uri.parse(baseUrl + apiUrl), body: {
+        "first_name": firstName,
+        "last_name": lastName,
+        "image": "string",
+        "rating": rating.toString(),
+        "message": message
+      });
+
+      print(response.statusCode);
+    } catch (e) {
+      print(e);
     }
   }
 }

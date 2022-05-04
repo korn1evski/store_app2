@@ -1,7 +1,8 @@
+import 'package:equatable/equatable.dart';
 import 'package:store_app/data/remote/models/id_product_model.dart';
 import 'package:store_app/domain/entities/category_entity.dart';
 
-class IdProductEntity {
+class IdProductEntity extends Equatable{
   IdProductEntity({
     required this.category,
     required this.name,
@@ -43,4 +44,8 @@ class IdProductEntity {
       return 'img/watch.jpeg';
     }
   }
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [id, name, reviews.length];
 }

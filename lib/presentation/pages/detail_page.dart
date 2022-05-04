@@ -63,6 +63,38 @@ class _DetailPageState extends State<DetailPage> {
             ],
           ),
         );
+      } else if (state is ProductUpdatedState) {
+        print(state.lastName);
+        return Scaffold(
+          body: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: Column(
+                    children: [
+                      TopDetailPage(
+                          productImg: state.product.mainImage,
+                          productId: state.product.id,
+                          images: state.product.images),
+                      ContentDetailPage(
+                        productId: state.product.id,
+                        productName: state.product.name,
+                        productSize: state.product.size,
+                        productColor: state.product.colour,
+                        productDetails: state.product.details,
+                        reviews: state.product.reviews,
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              BottomDetailPage(
+                productPrice: state.product.price,
+              )
+            ],
+          ),
+        );
       } else {
         return Center(
           child: Text('Something went wrong'),

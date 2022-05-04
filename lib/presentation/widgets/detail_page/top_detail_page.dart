@@ -35,6 +35,7 @@ class _TopDetailPageState extends State<TopDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    imgList = [];
     imgList.add(widget.productImg);
     for (var temp in widget.images) {
       imgList.add(temp.image);

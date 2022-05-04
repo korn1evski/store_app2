@@ -19,3 +19,12 @@ class ProductLoadedState extends DetailPageState {
   @override
   List<Object> get props => [product];
 }
+
+class ProductUpdatedState extends DetailPageState {
+  final product;
+  final String firstName;
+  final String lastName;
+  ProductUpdatedState({required this.product, required this.firstName, required this.lastName});
+  @override
+  List<Object> get props => [product, firstName, lastName];
+}

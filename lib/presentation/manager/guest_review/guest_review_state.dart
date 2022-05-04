@@ -15,3 +15,17 @@ class InitGuestState extends GuestReviewState {
   @override
   List<Object> get props => [formKey];
 }
+
+class UpdateReviewPageState extends GuestReviewState {
+  int review;
+  UpdateReviewPageState({required this.review});
+  @override
+  List<Object> get props => [review];
+}
+
+class ProvideImageState extends GuestReviewState {
+  final File image;
+  ProvideImageState({required this.image});
+  @override
+  List<Object> get props => [image];
+}

@@ -10,4 +10,5 @@ abstract class SwaggerRepository {
   Future<List<CategoryEntity>> getCategoriesData();
   Future<IdProductEntity> getProductById(int id);
   Future<List<ProductEntity>> getAllProducts();
+  Future<void> sendReview({required int id, required String firstName, required String lastName, required int rating, required String message});
 }

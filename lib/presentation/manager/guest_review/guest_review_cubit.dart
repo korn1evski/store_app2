@@ -1,24 +1,23 @@
-import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:bloc/bloc.dart';
-import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../../domain/use_cases/upload_image_usecase.dart';
+
 part 'guest_review_state.dart';
 
 class GuestReviewCubit extends Cubit<GuestReviewState> {
-  GuestReviewCubit()
-      : super(GuestReviewInitial());
+  GuestReviewCubit({required this.uploadImageUseCase})
+      : super(GuestReviewInitial(visible: false));
+  final UploadImageUseCase uploadImageUseCase;
+  String? imageLink;
 
   late String status;
   final ImagePicker _picker = ImagePicker();
   late var response;
-  Dio dio = new Dio();
 
   void setReview(int review) {
     emit(UpdateReviewPageState(review: review));
@@ -28,8 +27,8 @@ class GuestReviewCubit extends Cubit<GuestReviewState> {
     emit(LoadingReviewState());
   }
 
-  void toInitial(){
-    emit(GuestReviewInitial());
+  void upgradeInitial(bool visible){
+    emit(GuestReviewInitial(visible: visible));
   }
 
   Future pickImage() async {
@@ -39,7 +38,9 @@ class GuestReviewCubit extends Cubit<GuestReviewState> {
         return;
       }
       final imageTemp = File(image.path);
-      emit(ProvideImageState(image: imageTemp));
+      imageLink = await uploadImageUseCase.call(imageTemp);
+      imageLink ??= 'string';
+      emit(ProvideImageState(image: imageTemp, link: imageLink!));
     } on PlatformException catch (e) {
       print('Error');
     }
@@ -52,7 +53,9 @@ class GuestReviewCubit extends Cubit<GuestReviewState> {
         return;
       }
       final imageTemp = File(image.path);
-      emit(ProvideImageState(image: imageTemp));
+      imageLink = await uploadImageUseCase.call(imageTemp);
+      imageLink ??= 'string';
+      emit(ProvideImageState(image: imageTemp, link: imageLink!));
     } on PlatformException catch (e) {
       print('Error');
     }

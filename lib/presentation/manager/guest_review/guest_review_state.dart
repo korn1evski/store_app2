@@ -5,8 +5,10 @@ abstract class GuestReviewState extends Equatable {
 }
 
 class GuestReviewInitial extends GuestReviewState {
+  GuestReviewInitial({required this.visible});
+  final bool visible;
   @override
-  List<Object> get props => [];
+  List<Object> get props => [visible];
 }
 
 class InitGuestState extends GuestReviewState {
@@ -25,9 +27,10 @@ class UpdateReviewPageState extends GuestReviewState {
 
 class ProvideImageState extends GuestReviewState {
   final File image;
-  ProvideImageState({required this.image});
+  final String link;
+  ProvideImageState({required this.image, required this.link});
   @override
-  List<Object> get props => [image];
+  List<Object> get props => [image, link];
 }
 
 class LoadingReviewState extends GuestReviewState {

@@ -27,8 +27,8 @@ Future<void> init() async {
   sl.registerFactory<AllFavoritesCubit>(() => AllFavoritesCubit(getAllProductsUseCase: sl.call()));
   sl.registerFactory<AllProductsCubit>(() => AllProductsCubit(getCategoriesDataUseCase: sl.call(), getResultDataUseCase: sl.call()));
   sl.registerFactory<FavoritesMainCubit>(() => FavoritesMainCubit());
-  sl.registerFactory<DetailPageCubit>(() => DetailPageCubit(getProductByIdUseCase: sl.call(), sendReviewUseCase: sl.call(), uploadImageUseCase: sl.call()));
-  sl.registerFactory<GuestReviewCubit>(() => GuestReviewCubit());
+  sl.registerFactory<DetailPageCubit>(() => DetailPageCubit(getProductByIdUseCase: sl.call(), sendReviewUseCase: sl.call()));
+  sl.registerFactory<GuestReviewCubit>(() => GuestReviewCubit(uploadImageUseCase: sl.call()));
 
   sl.registerLazySingleton<SharedPreferences>(() => prefs);
 

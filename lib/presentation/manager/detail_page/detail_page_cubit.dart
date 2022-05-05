@@ -1,10 +1,8 @@
-import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:store_app/domain/use_cases/get_product_by_id_usecase.dart';
-import 'package:store_app/domain/use_cases/upload_image_usecase.dart';
 import '../../../domain/use_cases/send_review_usecase.dart';
 import '../guest_review/guest_review_cubit.dart';
 
@@ -13,12 +11,10 @@ part 'detail_page_state.dart';
 class DetailPageCubit extends Cubit<DetailPageState> {
   DetailPageCubit(
       {required this.getProductByIdUseCase,
-      required this.sendReviewUseCase,
-      required this.uploadImageUseCase})
+      required this.sendReviewUseCase,})
       : super(DetailPageInitial());
   final GetProductByIdUseCase getProductByIdUseCase;
   final SendReviewUseCase sendReviewUseCase;
-  final UploadImageUseCase uploadImageUseCase;
   String? imageLink;
 
   void loading() {
@@ -32,21 +28,19 @@ class DetailPageCubit extends Cubit<DetailPageState> {
       required int rating,
       required String message,
       required int productId,
-      required File image,
+      required String imageLink,
       required BuildContext context}) async {
-    imageLink = await uploadImageUseCase.call(image);
-    imageLink ??= 'string';
     await sendReviewUseCase.call(
         id: id,
         firstName: firstName,
         lastName: lastName,
         rating: rating,
         message: message,
-        img: imageLink!);
+        img: imageLink);
     Navigator.pop(context);
 
     updateDetailPage(productId);
-    BlocProvider.of<GuestReviewCubit>(context).toInitial();
+    BlocProvider.of<GuestReviewCubit>(context).upgradeInitial(false);
   }
 
   void getProduct(int id) async {

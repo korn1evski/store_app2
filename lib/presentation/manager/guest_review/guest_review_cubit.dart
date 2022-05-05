@@ -1,29 +1,35 @@
+import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:bloc/bloc.dart';
+import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:image/image.dart' as Img;
-import 'package:store_app/domain/use_cases/send_review_usecase.dart';
 
 part 'guest_review_state.dart';
 
 class GuestReviewCubit extends Cubit<GuestReviewState> {
-  GuestReviewCubit({required this.sendReviewUseCase}) : super(GuestReviewInitial());
-  final SendReviewUseCase sendReviewUseCase;
+  GuestReviewCubit()
+      : super(GuestReviewInitial());
 
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late String status;
   final ImagePicker _picker = ImagePicker();
-
-  void initAction() {
-    emit(InitGuestState(formKey: _formKey));
-  }
+  late var response;
+  Dio dio = new Dio();
 
   void setReview(int review) {
     emit(UpdateReviewPageState(review: review));
+  }
+
+  void loadingReview(){
+    emit(LoadingReviewState());
+  }
+
+  void toInitial(){
+    emit(GuestReviewInitial());
   }
 
   Future pickImage() async {
@@ -51,26 +57,4 @@ class GuestReviewCubit extends Cubit<GuestReviewState> {
       print('Error');
     }
   }
-
-  Future<File> _saveImageToDisk(String path, Directory directory) async {
-    try {
-      final file = File(path);
-      Img.Image image = Img.decodeImage(file.readAsBytesSync())!;
-      String imgType = path
-          .split('.')
-          .last;
-      String mPath = '${directory.toString()}/image_${DateTime.now()}.$imgType';
-      File dFile = File(mPath);
-      if (imgType == 'jpeg' || imgType == 'jpg') {
-        dFile.writeAsBytesSync(Img.encodeJpg(image));
-      } else {
-        dFile.writeAsBytesSync(Img.encodePng(image));
-      }
-      return dFile;
-    } catch(e){
-      print('Error');
-      return File('');
-    }
-  }
-
 }

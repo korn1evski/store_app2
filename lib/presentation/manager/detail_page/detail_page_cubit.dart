@@ -1,33 +1,61 @@
+import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:store_app/domain/use_cases/get_product_by_id_usecase.dart';
-
+import 'package:store_app/domain/use_cases/upload_image_usecase.dart';
 import '../../../domain/use_cases/send_review_usecase.dart';
+import '../guest_review/guest_review_cubit.dart';
 
 part 'detail_page_state.dart';
 
 class DetailPageCubit extends Cubit<DetailPageState> {
-  DetailPageCubit({required this.getProductByIdUseCase, required this.sendReviewUseCase}) : super(DetailPageInitial());
+  DetailPageCubit(
+      {required this.getProductByIdUseCase,
+      required this.sendReviewUseCase,
+      required this.uploadImageUseCase})
+      : super(DetailPageInitial());
   final GetProductByIdUseCase getProductByIdUseCase;
   final SendReviewUseCase sendReviewUseCase;
+  final UploadImageUseCase uploadImageUseCase;
+  String? imageLink;
 
-  void loading(){
+  void loading() {
     emit(LoadingDetailState());
   }
 
-  Future<void> sendReview ({required int id, required String firstName, required String lastName, required int rating, required String message, required int productId}) async {
-    await sendReviewUseCase.call(id: id, firstName: firstName, lastName: lastName, rating: rating, message: message);
-    updateDetailPage(productId, lastName, firstName);
+  Future<void> sendReview(
+      {required int id,
+      required String firstName,
+      required String lastName,
+      required int rating,
+      required String message,
+      required int productId,
+      required File image,
+      required BuildContext context}) async {
+    imageLink = await uploadImageUseCase.call(image);
+    imageLink ??= 'string';
+    await sendReviewUseCase.call(
+        id: id,
+        firstName: firstName,
+        lastName: lastName,
+        rating: rating,
+        message: message,
+        img: imageLink!);
+    Navigator.pop(context);
+
+    updateDetailPage(productId);
+    BlocProvider.of<GuestReviewCubit>(context).toInitial();
   }
 
-  void getProduct(int id) async{
+  void getProduct(int id) async {
     var product = await getProductByIdUseCase.call(id);
     emit(ProductLoadedState(product: product));
   }
 
-  void updateDetailPage(int id, String lastName, String firstName) async{
+  void updateDetailPage(int id) async {
     var product = await getProductByIdUseCase.call(id);
-    emit(ProductUpdatedState(product: product, firstName: firstName, lastName: lastName));
+    emit(ProductUpdatedState(product: product));
   }
-
 }

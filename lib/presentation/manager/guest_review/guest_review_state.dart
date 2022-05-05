@@ -29,3 +29,10 @@ class ProvideImageState extends GuestReviewState {
   @override
   List<Object> get props => [image];
 }
+
+class LoadingReviewState extends GuestReviewState {
+
+  @override
+  List<Object> get props => [];
+}
+

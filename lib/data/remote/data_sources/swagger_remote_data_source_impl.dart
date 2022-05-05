@@ -1,3 +1,9 @@
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:dio/dio.dart';
+import 'package:flutter/services.dart';
 import 'package:store_app/data/remote/data_sources/swagger_remote_data_source.dart';
 import 'package:store_app/data/remote/models/id_product_model.dart';
 import 'package:store_app/domain/entities/id_product_entity.dart';
@@ -7,6 +13,7 @@ import '../../../domain/entities/category_entity.dart';
 import '../../../domain/entities/product_entity.dart';
 import 'package:http/http.dart' as http;
 import '../models/categories_model.dart';
+import '../models/imgbb_model.dart';
 import '../models/products_model.dart';
 
 class SwaggerRemoteDataSourceImpl extends SwaggerRemoteDataSource {
@@ -115,14 +122,16 @@ class SwaggerRemoteDataSourceImpl extends SwaggerRemoteDataSource {
       required String firstName,
       required String lastName,
       required int rating,
-      required String message}) async {
+      required String message,
+      required String img
+      }) async {
     String apiUrl = '/products/$id/add-review';
 
     try {
       final response = await http.post(Uri.parse(baseUrl + apiUrl), body: {
         "first_name": firstName,
         "last_name": lastName,
-        "image": "string",
+        "image": img,
         "rating": rating.toString(),
         "message": message
       });
@@ -130,6 +139,32 @@ class SwaggerRemoteDataSourceImpl extends SwaggerRemoteDataSource {
       print(response.statusCode);
     } catch (e) {
       print(e);
+    }
+  }
+
+  @override
+  Future<String> uploadImage(File image) async{
+    Dio dio = new Dio();
+    try {
+      ByteData bytes = await rootBundle.load(image.path);
+      var buffer = bytes.buffer;
+      var m = base64.encode(Uint8List.view(buffer));
+
+      FormData formData = FormData.fromMap(
+          {"key": '69ac5ee9c3494e21806183fbb5f9df2a', "image": m});
+
+      Response response = await dio.post(
+        "https://api.imgbb.com/1/upload",
+        data: formData,
+      );
+
+      if(response.statusCode != 400){
+        return ImgbbResponseModel.fromJson(response.data).data.displayUrl;
+      } else {
+        return 'string';
+      }
+    } catch (e) {
+      return 'string';
     }
   }
 }

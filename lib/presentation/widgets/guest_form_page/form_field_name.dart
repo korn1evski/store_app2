@@ -15,7 +15,7 @@ class FormFieldName extends StatelessWidget {
       validator: (value) {
         if (value == null || value.trim().isEmpty) {
           return 'Please enter your $target';
-        } else if (!isAlpha(value)) {
+        } else if (!isAlpha(value.trim())) {
           return '$target should contain only letters';
         } else {
           return null;

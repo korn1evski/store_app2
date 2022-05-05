@@ -35,14 +35,18 @@ class ReviewWidget extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: CachedNetworkImage(
-                  imageUrl: image,
-                  placeholder: (context, url) => CircularProgressIndicator(),
-                  errorWidget: (context, url, error) => Image.asset('img/person.jpg'),
-                  width: 46,
-                  height: 46,
+              CachedNetworkImage(
+                imageUrl: image,
+                imageBuilder: (context, imageProvider) {
+                  return CircleAvatar(
+                    radius: 20,
+                    backgroundImage: imageProvider,
+                  );
+                },
+                placeholder: (context, url) => CircularProgressIndicator(),
+                errorWidget: (context, url, error) => CircleAvatar(
+                  radius: 20,
+                  backgroundImage: AssetImage('img/person.jpg'),
                 ),
               ),
               SizedBox(

@@ -1,6 +1,7 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:store_app/core/colors.dart';
 import 'package:store_app/presentation/manager/all_products/all_products_cubit.dart';
@@ -91,10 +92,7 @@ class _NavPageState extends State<NavPage> with TickerProviderStateMixin {
                                     size: 20,
                                   )),
                               Tab(
-                                icon: Icon(
-                                  Icons.person_outline,
-                                  size: 20,
-                                ),
+                                icon: SvgPicture.asset('img/manIcon.svg', height: 17, width: 16,)
                               ),
                             ],
                           )),

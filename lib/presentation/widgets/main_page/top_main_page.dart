@@ -1,6 +1,7 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:store_app/core/colors.dart';
 
 import '../../pages/search_page.dart';
@@ -35,14 +36,11 @@ class TopMainPage extends StatelessWidget {
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
-                  children: const [
+                  children: [
                     Padding(
                       padding:
                       EdgeInsets.only(left: 20, top: 11, bottom: 14),
-                      child: Icon(
-                        Icons.search,
-                        size: 20,
-                      ),
+                      child: SvgPicture.asset('img/search.svg', width: 18, height: 18,),
                     ),
                   ],
                 ),
@@ -55,12 +53,8 @@ class TopMainPage extends StatelessWidget {
                 color: AppColors.green1,
                 borderRadius: BorderRadius.circular(45),
               ),
-              child: const Center(
-                child: Icon(
-                  Icons.camera_alt_outlined,
-                  color: Colors.white,
-                  size: 25,
-                ),
+              child: Center(
+                child: SvgPicture.asset('img/camera.svg', width: 18, height: 16,),
               ),
             )
           ],

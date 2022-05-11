@@ -1,5 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:store_app/presentation/widgets/rounded_cached_image.dart';
 
 import '../common_text.dart';
 
@@ -22,9 +24,9 @@ class ReviewWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     List stars = [];
     for (int i = 0; i < startCount; i++) {
-      stars.add(const Padding(
+      stars.add(Padding(
         padding: EdgeInsets.only(left: 7),
-        child: Icon(Icons.star, size: 20, color: Colors.yellow),
+        child: SvgPicture.asset('img/fstar.svg', width: 15, height: 14),
       ));
     }
     return Padding(
@@ -35,20 +37,7 @@ class ReviewWidget extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CachedNetworkImage(
-                imageUrl: image,
-                imageBuilder: (context, imageProvider) {
-                  return CircleAvatar(
-                    radius: 20,
-                    backgroundImage: imageProvider,
-                  );
-                },
-                placeholder: (context, url) => CircularProgressIndicator(),
-                errorWidget: (context, url, error) => CircleAvatar(
-                  radius: 20,
-                  backgroundImage: AssetImage('img/person.jpg'),
-                ),
-              ),
+              RoundedCachedImage(imgUrl: image, radius: 20),
               SizedBox(
                 width: 32,
               ),

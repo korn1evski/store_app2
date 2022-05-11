@@ -50,17 +50,17 @@ class _GuestFormPageState extends State<GuestFormPage> {
                         if (state is ProvideImageState) {
                           this.imgLink = state.link;
                           this.image = state.image;
-                          return RoungPhoto(
+                          return RoundPhoto(
                             isFlutter: false,
                             image: image!,
                           );
                         } else {
                           return image != null
-                              ? RoungPhoto(
+                              ? RoundPhoto(
                                   isFlutter: false,
                                   image: image!,
                                 )
-                              : RoungPhoto(isFlutter: true);
+                              : RoundPhoto(isFlutter: true);
                         }
                       },
                     ),
@@ -123,9 +123,9 @@ class _GuestFormPageState extends State<GuestFormPage> {
                         builder: (context, state) {
                       if (state is UpdateReviewPageState) {
                         starsReview = state.review;
-                        return Stars(selectedStar: starsReview);
+                        return Stars(selectedStar: starsReview, textLength: 0,);
                       } else {
-                        return Stars(selectedStar: -1);
+                        return Stars(selectedStar: -1, textLength: 0,);
                       }
                     }),
                     FloatingActionButton.extended(

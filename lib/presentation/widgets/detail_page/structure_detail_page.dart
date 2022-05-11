@@ -41,6 +41,7 @@ class StructureDetailPage extends StatelessWidget {
                     productColor: productColor,
                     productDetails: productDetails,
                     reviews: reviews,
+                    image: mainImage,
                   )
                 ],
               ),

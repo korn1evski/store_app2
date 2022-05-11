@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:readmore/readmore.dart';
 import 'package:store_app/core/colors.dart';
 import 'package:store_app/presentation/pages/guest_form_page.dart';
+import 'package:store_app/presentation/pages/review_page.dart';
 import 'package:store_app/presentation/widgets/detail_page/review_widget.dart';
 
 import '../../../data/remote/models/id_product_model.dart';
@@ -15,6 +16,7 @@ class ContentDetailPage extends StatelessWidget {
   final String productColor;
   final String productDetails;
   final List<Review> reviews;
+  final String image;
 
   const ContentDetailPage(
       {Key? key,
@@ -23,7 +25,9 @@ class ContentDetailPage extends StatelessWidget {
       required this.productSize,
       required this.productColor,
       required this.productDetails,
-      required this.reviews})
+      required this.reviews,
+      required this.image
+      })
       : super(key: key);
 
   @override
@@ -87,7 +91,7 @@ class ContentDetailPage extends StatelessWidget {
           ),
           GestureDetector(
             onTap: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context) => GuestFormPage(productId: productId,)));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => ReviewPage(productId: productId, image: image, name: productName, details: productDetails)));
             },
             child: Padding(
               padding: const EdgeInsets.only(top: 8, bottom: 0),

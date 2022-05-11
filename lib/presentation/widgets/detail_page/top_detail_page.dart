@@ -113,9 +113,11 @@ class _TopDetailPageState extends State<TopDetailPage> {
                           Navigator.pop(context);
                         },
                         child: FavoriteCircle(
+                          width: 16,
+                          height: 17,
                           size: 40,
                           iconSize: 20,
-                          icon: Icons.arrow_back,
+                          icon: 'img/arrow.svg',
                         )),
                     GestureDetector(
                       onTap: () async {
@@ -139,15 +141,17 @@ class _TopDetailPageState extends State<TopDetailPage> {
                         widget.prefs.setStringList('favorites', favoritesList);
                       },
                       child: FavoriteCircle(
+                        width: 17,
+                        height: 16,
                         size: 40,
                         iconSize: 20,
                         icon:
                             favoritesList.contains(widget.productId.toString())
-                                ? Icons.star
-                                : Icons.star_outline,
+                                ? 'img/fstar.svg'
+                                : 'img/star.svg',
                         iconColor:
                             favoritesList.contains(widget.productId.toString())
-                                ? Colors.amber
+                                ? AppColors.yellow1
                                 : Colors.black,
                       ),
                     )

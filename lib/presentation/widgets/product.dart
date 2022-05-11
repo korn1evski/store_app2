@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:store_app/core/colors.dart';
 import 'package:store_app/presentation/widgets/common_text.dart';
 
@@ -52,8 +53,10 @@ class Product extends StatelessWidget {
                 child: Visibility(
                   visible: isVisible,
                   child: FavoriteCircle(
-                    icon: isFavorite ? Icons.star : Icons.star_outline,
-                    iconColor: isFavorite ? Colors.amber : Colors.black,
+                    width: 13,
+                    height: 12,
+                    icon: isFavorite ? 'img/fstar.svg' : 'img/star.svg',
+                    iconColor: isFavorite ? AppColors.yellow1 : Colors.black,
                   ),
                 )),
           ],

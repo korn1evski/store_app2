@@ -3,8 +3,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
-class RoungPhoto extends StatelessWidget {
-  const RoungPhoto({Key? key, required this.isFlutter, this.image}) : super(key: key);
+class RoundPhoto extends StatelessWidget {
+  const RoundPhoto({Key? key, required this.isFlutter, this.image}) : super(key: key);
 
   final File? image;
   final bool isFlutter;

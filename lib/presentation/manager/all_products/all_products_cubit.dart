@@ -15,8 +15,8 @@ class AllProductsCubit extends Cubit<AllProductsState> {
   final GetCategoriesDataUseCase getCategoriesDataUseCase;
   final GetResultDataUseCase getResultDataUseCase;
   late var productsEntity;
-  late final categories;
-  late final totalPages;
+  late var categories;
+  late var totalPages;
   int currentPage = 1;
 
 
@@ -36,11 +36,11 @@ class AllProductsCubit extends Cubit<AllProductsState> {
 
       emit(MainLoadedState(products: products, currentPage: currentPage, totalPages: totalPages, categories: categories));
     } catch(e) {
-
+      print(e);
     }
   }
 
-  void refreshedMain(List<ProductViewModel> products, currentPage) async{
+  Future<void> refreshedMain(List<ProductViewModel> products, currentPage) async{
     try {
       productsEntity = await getResultDataUseCase.call(currentPage);
       for (var productEntity in productsEntity.products) {

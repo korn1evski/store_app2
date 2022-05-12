@@ -5,26 +5,28 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:store_app/domain/entities/account_info_entity.dart';
 import 'package:store_app/domain/use_cases/get_account_info.dart';
+import 'package:store_app/domain/use_cases/get_shared_string_usecase.dart';
+import 'package:store_app/domain/use_cases/set_shared_string_usecase.dart';
 import 'package:store_app/domain/use_cases/verify_login_usecase.dart';
-import 'package:store_app/injection_container.dart' as di;
 import 'package:store_app/presentation/pages/intro_page.dart';
 part 'account_state.dart';
 
 class AccountCubit extends Cubit<AccountState> {
-  AccountCubit({required this.verifyLoginUseCase, required this.getAccountInfoUseCase}) : super(AccountInitial());
+  AccountCubit({required this.verifyLoginUseCase, required this.getAccountInfoUseCase, required this.setSharedStringUseCase, required this.getSharedStringUseCase}) : super(AccountInitial());
 
   final VerifyLoginUseCase verifyLoginUseCase;
   final GetAccountInfoUseCase getAccountInfoUseCase;
-  final prefs = di.sl<SharedPreferences>();
+  final GetSharedStringUseCase getSharedStringUseCase;
+  final SetSharedStringUseCase setSharedStringUseCase;
 
   Future<void> loadAccountPage() async{
     emit(AccountPageLoadingState());
-    String result = await verifyLoginUseCase.call(prefs.getString('refreshToken')!);
+    String result = await verifyLoginUseCase.call(getSharedStringUseCase.call('refreshToken')!);
     if(result == ''){
       emit(AccountPageErrorState());
     } else {
-      await prefs.setString('accessToken', result);
-      final AccountInfoEntity accountInfoEntity = await getAccountInfoUseCase.call(prefs.getString('accessToken')!);
+      await setSharedStringUseCase.call('accessToken', result);
+      final AccountInfoEntity accountInfoEntity = await getAccountInfoUseCase.call(getSharedStringUseCase.call('accessToken')!);
       if(accountInfoEntity.id == -1){
         emit(AccountPageErrorState());
       } else {
@@ -34,8 +36,8 @@ class AccountCubit extends Cubit<AccountState> {
   }
 
   Future<void>logOut(BuildContext context) async{
-    await prefs.setString('refreshToken', '');
-    await prefs.setString('accessToken', '');
+    await setSharedStringUseCase.call('refreshToken', '');
+    await setSharedStringUseCase.call('accessToken', '');
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => IntroPage()));
   }
 

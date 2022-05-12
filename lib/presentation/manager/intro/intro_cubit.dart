@@ -1,24 +1,34 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:store_app/domain/use_cases/get_shared_string_usecase.dart';
+import 'package:store_app/domain/use_cases/set_shared_string_usecase.dart';
 import 'package:store_app/domain/use_cases/verify_login_usecase.dart';
-import 'package:store_app/injection_container.dart' as di;
+
+import '../../pages/login_page.dart';
 part 'intro_state.dart';
 
 class IntroCubit extends Cubit<IntroState> {
-  IntroCubit({required this.verifyLoginUseCase}) : super(IntroInitial());
+  IntroCubit({required this.verifyLoginUseCase, required this.setSharedStringUseCase, required this.getSharedStringUseCase}) : super(IntroInitial());
 
   final VerifyLoginUseCase verifyLoginUseCase;
-  final prefs = di.sl<SharedPreferences>();
+  final GetSharedStringUseCase getSharedStringUseCase;
+  final SetSharedStringUseCase setSharedStringUseCase;
 
-  Future<void> verifyLogin(String refreshToken) async{
-    emit(IntroLoadingState());
-    String result = await verifyLoginUseCase.call(refreshToken);
-    if(result == ''){
-      emit(IntroErrorLoadedState());
+  Future<void> verifyLogin(BuildContext context) async{
+    final refreshToken = getSharedStringUseCase.call('refreshToken');
+    if(refreshToken != null) {
+      emit(IntroLoadingState());
+      String result = await verifyLoginUseCase.call(refreshToken);
+      if (result == '') {
+        emit(IntroErrorLoadedState());
+      } else {
+        await setSharedStringUseCase.call('accessToken', result);
+        emit(IntroLoadedState());
+      }
     } else {
-      await prefs.setString('accessToken', result);
-      emit(IntroLoadedState());
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage()));
     }
   }
 }

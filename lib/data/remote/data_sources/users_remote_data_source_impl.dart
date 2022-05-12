@@ -1,14 +1,18 @@
 import 'package:store_app/data/remote/data_sources/users_remote_data_source.dart';
 
 import 'package:http/http.dart' as http;
-import 'package:store_app/data/remote/models/account_info_model.dart';
+import 'package:store_app/data/remote/dio_config.dart';
 import 'package:store_app/data/remote/models/login_response_model.dart';
 import 'package:store_app/data/remote/models/refresh_response_model.dart';
+import 'package:dio/dio.dart';
+import 'package:store_app/injection_container.dart' as di;
 
 import '../../../domain/entities/account_info_entity.dart';
 
 class UsersRemoteDataSourceImpl extends UsersRemoteDataSource {
   final String baseUrl = 'http://mobile-shop-api.hiring.devebs.net/users';
+  final _dio = di.sl<Dio>();
+  DioConfig dioConfig = DioConfig();
 
   @override
   Future<String> registerUser(String fullName, String email, String phoneNumber,
@@ -74,12 +78,14 @@ class UsersRemoteDataSourceImpl extends UsersRemoteDataSource {
 
   @override
   Future<AccountInfoEntity> accountInfo(String accessToken) async{
+
+    dioConfig.configureDio(accessToken);
+
     try {
-      final response = await http.get(Uri.parse(baseUrl + '/profile'), headers: {'Authorization' : 'Token $accessToken'});
+      final response = await _dio.get(baseUrl + '/profile');
 
       if(response.statusCode == 200){
-        final AccountInfoEntity result = accountInfoModelFromJson(response.body);
-        return result;
+        return AccountInfoEntity(id: response.data['id'], fullName: response.data['full_name'], email: response.data['email'], phoneNumber: response.data['phone_number']);
       } else {
         return AccountInfoEntity(id: -1, fullName: '', phoneNumber: '', email: '');
       }

@@ -23,3 +23,4 @@ class IntroErrorLoadedState extends IntroState {
   @override
   List<Object> get props => [];
 }
+

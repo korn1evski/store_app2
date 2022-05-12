@@ -12,7 +12,6 @@ import 'package:store_app/presentation/manager/login/login_cubit.dart';
 import 'package:store_app/presentation/manager/register/register_cubit.dart';
 import 'package:store_app/presentation/manager/search_page/search_page_cubit.dart';
 import 'package:store_app/presentation/pages/intro_page.dart';
-import 'package:store_app/presentation/pages/login_page.dart';
 import 'injection_container.dart' as di;
 
 void main() async {

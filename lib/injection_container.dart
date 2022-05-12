@@ -1,11 +1,16 @@
+import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:store_app/data/local/data_sources/auth_remote_data_source.dart';
+import 'package:store_app/data/local/data_sources/auth_remote_data_source_impl.dart';
 import 'package:store_app/data/remote/data_sources/swagger_remote_data_source.dart';
 import 'package:store_app/data/remote/data_sources/swagger_remote_data_source_impl.dart';
 import 'package:store_app/data/remote/data_sources/users_remote_data_source.dart';
 import 'package:store_app/data/remote/data_sources/users_remote_data_source_impl.dart';
+import 'package:store_app/data/repositories/auth_repository_impl.dart';
 import 'package:store_app/data/repositories/swagger_repository_impl.dart';
 import 'package:store_app/data/repositories/users_repository_impl.dart';
+import 'package:store_app/domain/repositories/auth_repository.dart';
 import 'package:store_app/domain/repositories/swagger_repository.dart';
 import 'package:store_app/domain/repositories/users_repository.dart';
 import 'package:store_app/domain/use_cases/get_account_info.dart';
@@ -13,9 +18,11 @@ import 'package:store_app/domain/use_cases/get_all_products_usecase.dart';
 import 'package:store_app/domain/use_cases/get_categories_data_usecase.dart';
 import 'package:store_app/domain/use_cases/get_product_by_id_usecase.dart';
 import 'package:store_app/domain/use_cases/get_result_data_usecase.dart';
+import 'package:store_app/domain/use_cases/get_shared_string_usecase.dart';
 import 'package:store_app/domain/use_cases/login_usecase.dart';
 import 'package:store_app/domain/use_cases/register_user_usecase.dart';
 import 'package:store_app/domain/use_cases/send_review_usecase.dart';
+import 'package:store_app/domain/use_cases/set_shared_string_usecase.dart';
 import 'package:store_app/domain/use_cases/upload_image_usecase.dart';
 import 'package:store_app/domain/use_cases/verify_login_usecase.dart';
 import 'package:store_app/presentation/manager/account/account_cubit.dart';
@@ -45,10 +52,11 @@ Future<void> init() async {
   sl.registerFactory<ReviewPageCubit>(() => ReviewPageCubit());
   sl.registerFactory<RegisterCubit>(() => RegisterCubit(registerUserUseCase: sl.call()));
   sl.registerFactory<LoginCubit>(() => LoginCubit(loginUseCase: sl.call()));
-  sl.registerFactory<IntroCubit>(() => IntroCubit(verifyLoginUseCase: sl.call()));
-  sl.registerFactory<AccountCubit>(() => AccountCubit(verifyLoginUseCase: sl.call(), getAccountInfoUseCase: sl.call()));
+  sl.registerFactory<IntroCubit>(() => IntroCubit(verifyLoginUseCase: sl.call(), setSharedStringUseCase: sl.call(), getSharedStringUseCase: sl.call()));
+  sl.registerFactory<AccountCubit>(() => AccountCubit(verifyLoginUseCase: sl.call(), getAccountInfoUseCase: sl.call(), getSharedStringUseCase: sl.call(), setSharedStringUseCase: sl.call()));
 
   sl.registerLazySingleton<SharedPreferences>(() => prefs);
+  sl.registerLazySingleton<Dio>(() => Dio());
 
   sl.registerLazySingleton<GetResultDataUseCase>(() => GetResultDataUseCase(repository: sl.call()));
   sl.registerLazySingleton<GetCategoriesDataUseCase>(() => GetCategoriesDataUseCase(repository: sl.call()));
@@ -60,14 +68,18 @@ Future<void> init() async {
   sl.registerLazySingleton<LoginUseCase>(() => LoginUseCase(repository: sl.call()));
   sl.registerLazySingleton<VerifyLoginUseCase>(() => VerifyLoginUseCase(repository: sl.call()));
   sl.registerLazySingleton<GetAccountInfoUseCase>(() => GetAccountInfoUseCase(repository: sl.call()));
+  sl.registerLazySingleton<GetSharedStringUseCase>(() => GetSharedStringUseCase(repository: sl.call()));
+  sl.registerLazySingleton<SetSharedStringUseCase>(() => SetSharedStringUseCase(repository: sl.call()));
 
 
 
   sl.registerLazySingleton<SwaggerRepository>(() => SwaggerRepositoryImpl(swaggerRemoteDataSource: sl.call()));
   sl.registerLazySingleton<UsersRepository>(() => UsersRepositoryImpl(usersRemoteDataSource: sl.call()));
+  sl.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(authRemoteDataSource: sl.call()));
 
   sl.registerLazySingleton<SwaggerRemoteDataSource>(() => SwaggerRemoteDataSourceImpl());
   sl.registerLazySingleton<UsersRemoteDataSource>(() => UsersRemoteDataSourceImpl());
+  sl.registerLazySingleton<AuthRemoteDataSource>(() => AuthRemoteDataSourceImpl());
 
 
 

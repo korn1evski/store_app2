@@ -1,45 +1,26 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:store_app/domain/entities/product_entity.dart';
+import 'package:store_app/data/local/data_bases/shop_db.dart';
+import 'package:store_app/domain/entities/favorite_entity.dart';
 import 'package:store_app/domain/use_cases/get_all_products_usecase.dart';
-import 'package:store_app/injection_container.dart' as di;
-
-import '../view_models/product_viewmodel.dart';
-
+import 'package:store_app/domain/use_cases/get_favorites_usecase.dart';
 part 'all_favorites_state.dart';
 
 class AllFavoritesCubit extends Cubit<AllFavoritesState> {
-  AllFavoritesCubit({required this.getAllProductsUseCase}) : super(AllFavoritesInitial());
-  final GetAllProductsUseCase getAllProductsUseCase;
+  AllFavoritesCubit({required this.getFavoritesUseCase}) : super(AllFavoritesInitial());
+  final GetFavoritesUseCase getFavoritesUseCase;
 
   late dynamic products;
-  var prefs = di.sl<SharedPreferences>();
-
-  void loading(){
-    emit(LoadingState());
-  }
-
-  Future<void> getProducts() async{
-    try{
-      products = await getAllProductsUseCase.call();
-      products = ProductViewModel.fromEntityList(products);
-      List<String>? favoriteIds = prefs.getStringList('favorites');
-      if(favoriteIds == null) {
-        emit(ProductsLoadedState(products: <ProductViewModel>[]));
+  Future<void> getProducts() async {
+    try {
+      products = await getFavoritesUseCase.call();
+      if (products == null) {
+        emit(ProductsLoadedState(products: <FavoriteEntity>[]));
       } else {
-        List<ProductViewModel> favoriteProducts = <ProductViewModel>[];
-        for (var product in products){
-          if(favoriteIds.contains(product.id.toString())){
-            favoriteProducts.add(product);
-          }
-        }
-        emit(ProductsLoadedState(products: favoriteProducts));
+        emit(ProductsLoadedState(products: products));
       }
     } catch(e){
 
     }
   }
-
-
 }

@@ -6,6 +6,15 @@ String? simpleValid(String? value) {
   }
 }
 
+String? fullNameValid(String? value) {
+  if (value == null || value.trim().isEmpty) {
+    return 'Please enter your full name';
+  } else if(value.trim().split(' ').length != 2){
+    return 'Your first name and last name should be split by a space';
+  }
+}
+
+
 String? emailValid(String? value) {
   if (value == null || value.trim().isEmpty) {
     return 'Please enter your email';

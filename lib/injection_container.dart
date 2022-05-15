@@ -1,24 +1,32 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:store_app/data/local/data_bases/shop_db.dart';
 import 'package:store_app/data/local/data_sources/auth_remote_data_source.dart';
 import 'package:store_app/data/local/data_sources/auth_remote_data_source_impl.dart';
+import 'package:store_app/data/local/data_sources/favorite_dao.dart';
+import 'package:store_app/data/local/data_sources/favorites_data_source.dart';
 import 'package:store_app/data/remote/data_sources/swagger_remote_data_source.dart';
 import 'package:store_app/data/remote/data_sources/swagger_remote_data_source_impl.dart';
 import 'package:store_app/data/remote/data_sources/users_remote_data_source.dart';
 import 'package:store_app/data/remote/data_sources/users_remote_data_source_impl.dart';
 import 'package:store_app/data/repositories/auth_repository_impl.dart';
+import 'package:store_app/data/repositories/favorites_repository_impl.dart';
 import 'package:store_app/data/repositories/swagger_repository_impl.dart';
 import 'package:store_app/data/repositories/users_repository_impl.dart';
 import 'package:store_app/domain/repositories/auth_repository.dart';
+import 'package:store_app/domain/repositories/favorites_repository.dart';
 import 'package:store_app/domain/repositories/swagger_repository.dart';
 import 'package:store_app/domain/repositories/users_repository.dart';
+import 'package:store_app/domain/use_cases/delete_favorite_usecase.dart';
 import 'package:store_app/domain/use_cases/get_account_info.dart';
 import 'package:store_app/domain/use_cases/get_all_products_usecase.dart';
 import 'package:store_app/domain/use_cases/get_categories_data_usecase.dart';
+import 'package:store_app/domain/use_cases/get_favorites_usecase.dart';
 import 'package:store_app/domain/use_cases/get_product_by_id_usecase.dart';
 import 'package:store_app/domain/use_cases/get_result_data_usecase.dart';
 import 'package:store_app/domain/use_cases/get_shared_string_usecase.dart';
+import 'package:store_app/domain/use_cases/insert_favorite_usecase.dart';
 import 'package:store_app/domain/use_cases/login_usecase.dart';
 import 'package:store_app/domain/use_cases/register_user_usecase.dart';
 import 'package:store_app/domain/use_cases/send_review_usecase.dart';
@@ -33,6 +41,7 @@ import 'package:store_app/presentation/manager/favorites_main/favorites_main_cub
 import 'package:store_app/presentation/manager/guest_review/guest_review_cubit.dart';
 import 'package:store_app/presentation/manager/intro/intro_cubit.dart';
 import 'package:store_app/presentation/manager/login/login_cubit.dart';
+import 'package:store_app/presentation/manager/manage_favorite/manage_favorite_cubit.dart';
 import 'package:store_app/presentation/manager/register/register_cubit.dart';
 import 'package:store_app/presentation/manager/review_page/review_page_cubit.dart';
 import 'package:store_app/presentation/manager/search_page/search_page_cubit.dart';
@@ -42,21 +51,26 @@ GetIt sl = GetIt.instance;
 Future<void> init() async {
 
   final prefs = await SharedPreferences.getInstance();
+  final authDio = Dio();
+
+
 
   sl.registerFactory<SearchPageCubit>(() => SearchPageCubit(getAllProductsUseCase: sl.call()));
-  sl.registerFactory<AllFavoritesCubit>(() => AllFavoritesCubit(getAllProductsUseCase: sl.call()));
+  sl.registerFactory<AllFavoritesCubit>(() => AllFavoritesCubit(getFavoritesUseCase: sl.call()));
   sl.registerFactory<AllProductsCubit>(() => AllProductsCubit(getCategoriesDataUseCase: sl.call(), getResultDataUseCase: sl.call()));
   sl.registerFactory<FavoritesMainCubit>(() => FavoritesMainCubit());
-  sl.registerFactory<DetailPageCubit>(() => DetailPageCubit(getProductByIdUseCase: sl.call(), sendReviewUseCase: sl.call()));
+  sl.registerFactory<DetailPageCubit>(() => DetailPageCubit(getProductByIdUseCase: sl.call(), sendReviewUseCase: sl.call(), getAccountInfoUseCase: sl.call(), getSharedStringUseCase: sl.call(), verifyLoginUseCase: sl.call()));
   sl.registerFactory<GuestReviewCubit>(() => GuestReviewCubit(uploadImageUseCase: sl.call()));
   sl.registerFactory<ReviewPageCubit>(() => ReviewPageCubit());
   sl.registerFactory<RegisterCubit>(() => RegisterCubit(registerUserUseCase: sl.call()));
   sl.registerFactory<LoginCubit>(() => LoginCubit(loginUseCase: sl.call()));
   sl.registerFactory<IntroCubit>(() => IntroCubit(verifyLoginUseCase: sl.call(), setSharedStringUseCase: sl.call(), getSharedStringUseCase: sl.call()));
   sl.registerFactory<AccountCubit>(() => AccountCubit(verifyLoginUseCase: sl.call(), getAccountInfoUseCase: sl.call(), getSharedStringUseCase: sl.call(), setSharedStringUseCase: sl.call()));
+  sl.registerFactory<ManageFavoriteCubit>(() => ManageFavoriteCubit(deleteFavoriteUseCase: sl.call(), insertFavoriteUseCase: sl.call()));
 
   sl.registerLazySingleton<SharedPreferences>(() => prefs);
-  sl.registerLazySingleton<Dio>(() => Dio());
+  sl.registerLazySingleton<Dio>(() => authDio);
+  sl.registerLazySingleton<ShopDb>(() => ShopDb());
 
   sl.registerLazySingleton<GetResultDataUseCase>(() => GetResultDataUseCase(repository: sl.call()));
   sl.registerLazySingleton<GetCategoriesDataUseCase>(() => GetCategoriesDataUseCase(repository: sl.call()));
@@ -70,17 +84,37 @@ Future<void> init() async {
   sl.registerLazySingleton<GetAccountInfoUseCase>(() => GetAccountInfoUseCase(repository: sl.call()));
   sl.registerLazySingleton<GetSharedStringUseCase>(() => GetSharedStringUseCase(repository: sl.call()));
   sl.registerLazySingleton<SetSharedStringUseCase>(() => SetSharedStringUseCase(repository: sl.call()));
+  sl.registerLazySingleton<DeleteFavoriteUseCase>(() => DeleteFavoriteUseCase(favoritesRepository: sl.call()));
+  sl.registerLazySingleton<InsertFavoriteUseCase>(() => InsertFavoriteUseCase(favoritesRepository: sl.call()));
+  sl.registerLazySingleton<GetFavoritesUseCase>(() => GetFavoritesUseCase(favoritesRepository: sl.call()));
 
 
 
   sl.registerLazySingleton<SwaggerRepository>(() => SwaggerRepositoryImpl(swaggerRemoteDataSource: sl.call()));
   sl.registerLazySingleton<UsersRepository>(() => UsersRepositoryImpl(usersRemoteDataSource: sl.call()));
   sl.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(authRemoteDataSource: sl.call()));
+  sl.registerLazySingleton<FavoritesRepository>(() => FavoritesRepositoryImpl(favoritesDataSource: sl.call()));
 
   sl.registerLazySingleton<SwaggerRemoteDataSource>(() => SwaggerRemoteDataSourceImpl());
-  sl.registerLazySingleton<UsersRemoteDataSource>(() => UsersRemoteDataSourceImpl());
+  sl.registerLazySingleton<UsersRemoteDataSource>(() => UsersRemoteDataSourceImpl(authDio: authDio));
   sl.registerLazySingleton<AuthRemoteDataSource>(() => AuthRemoteDataSourceImpl());
+  sl.registerLazySingleton<FavoritesDataSource>(() => FavoriteDao(sl.call()));
 
 
+  configureAuthDio(dio: authDio, getSharedStringUseCase: sl.call());
+}
 
+void configureAuthDio({required Dio dio, required GetSharedStringUseCase getSharedStringUseCase}) async{
+  dio.interceptors.clear();
+
+  dio.interceptors.add(InterceptorsWrapper(onRequest: (options, handler) {
+    final accessToken = getSharedStringUseCase.call('accessToken');
+    if (accessToken != null || accessToken != '') {
+      options.headers['Authorization'] =
+          'Token $accessToken';
+      return handler.next(options);
+    } else {
+      return handler.next(options);
+    }
+  }));
 }

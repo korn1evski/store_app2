@@ -157,7 +157,6 @@ class _GuestFormPageState extends State<GuestFormPage> {
                               lastName: editLastName.text,
                               rating: starsReview + 1,
                               message: editMessage.value.text,
-                              productId: widget.productId,
                               imageLink: imgLink,
                               context: context);
                         }

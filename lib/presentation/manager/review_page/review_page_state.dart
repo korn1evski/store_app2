@@ -16,3 +16,10 @@ class UpdateReviewPageState extends ReviewPageState {
   @override
   List<Object> get props => [review, textLength];
 }
+
+class PositionedLoadingState extends ReviewPageState {
+  final isLoading = true;
+  @override
+  List<Object> get props => [isLoading];
+}
+

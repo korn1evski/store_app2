@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:store_app/data/remote/models/category_model.dart';
 import 'package:store_app/domain/entities/id_product_entity.dart';
-import 'package:store_app/domain/entities/product_entity.dart';
 
 IdProductModel  idProductFromJson(String str) => IdProductModel.fromJson(json.decode(str));
 

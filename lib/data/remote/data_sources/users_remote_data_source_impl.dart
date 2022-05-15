@@ -11,8 +11,8 @@ import '../../../domain/entities/account_info_entity.dart';
 
 class UsersRemoteDataSourceImpl extends UsersRemoteDataSource {
   final String baseUrl = 'http://mobile-shop-api.hiring.devebs.net/users';
-  final _dio = di.sl<Dio>();
-  DioConfig dioConfig = DioConfig();
+  UsersRemoteDataSourceImpl({required this.authDio});
+  final Dio authDio;
 
   @override
   Future<String> registerUser(String fullName, String email, String phoneNumber,
@@ -77,20 +77,19 @@ class UsersRemoteDataSourceImpl extends UsersRemoteDataSource {
   }
 
   @override
-  Future<AccountInfoEntity> accountInfo(String accessToken) async{
+  Future<AccountInfoEntity?> accountInfo() async{
 
-    dioConfig.configureDio(accessToken);
 
     try {
-      final response = await _dio.get(baseUrl + '/profile');
+      final response = await authDio.get(baseUrl + '/profile');
 
       if(response.statusCode == 200){
         return AccountInfoEntity(id: response.data['id'], fullName: response.data['full_name'], email: response.data['email'], phoneNumber: response.data['phone_number']);
       } else {
-        return AccountInfoEntity(id: -1, fullName: '', phoneNumber: '', email: '');
+        return null;
       }
     } catch(e){
-      return AccountInfoEntity(id: -1, fullName: '', phoneNumber: '', email: '');
+      return null;
     }
   }
 }

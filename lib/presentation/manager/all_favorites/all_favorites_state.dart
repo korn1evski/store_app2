@@ -15,8 +15,8 @@ class LoadingState extends AllFavoritesState {
 }
 
 class ProductsLoadedState extends AllFavoritesState {
-  final List<ProductViewModel> products;
-  ProductsLoadedState({required this.products});
+  final List<FavoriteEntity> products;
+  const ProductsLoadedState({required this.products});
   @override
   List<Object> get props => [products];
 }

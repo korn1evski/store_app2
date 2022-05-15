@@ -21,5 +21,5 @@ class UsersRepositoryImpl extends UsersRepository {
   Future<String> verifyLogin(String refreshToken) async => usersRemoteDataSource.verifyLogin(refreshToken);
 
   @override
-  Future<AccountInfoEntity> accountInfo(String accessToken) async => usersRemoteDataSource.accountInfo(accessToken);
+  Future<AccountInfoEntity?> accountInfo() async => usersRemoteDataSource.accountInfo();
 }

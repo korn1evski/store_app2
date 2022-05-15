@@ -18,7 +18,6 @@ class _FavoritesPageState extends State<FavoritesPage> {
     super.initState();
 
     WidgetsBinding.instance?.addPostFrameCallback((_) {
-      BlocProvider.of<AllFavoritesCubit>(context).loading();
       BlocProvider.of<AllFavoritesCubit>(context).getProducts();
     });
   }

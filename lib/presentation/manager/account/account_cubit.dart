@@ -26,8 +26,8 @@ class AccountCubit extends Cubit<AccountState> {
       emit(AccountPageErrorState());
     } else {
       await setSharedStringUseCase.call('accessToken', result);
-      final AccountInfoEntity accountInfoEntity = await getAccountInfoUseCase.call(getSharedStringUseCase.call('accessToken')!);
-      if(accountInfoEntity.id == -1){
+      final AccountInfoEntity? accountInfoEntity = await getAccountInfoUseCase.call();
+      if(accountInfoEntity == null){
         emit(AccountPageErrorState());
       } else {
         emit(AccountPageLoadedState(fullName: accountInfoEntity.fullName, email: accountInfoEntity.email, phoneNumber: accountInfoEntity.phoneNumber));

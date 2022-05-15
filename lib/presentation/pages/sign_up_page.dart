@@ -100,7 +100,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         children: [
                           SimpleInput(
                             controller: nameController,
-                            validationFunc: simpleValid,
+                            validationFunc: fullNameValid,
                             hintText: 'Full Name',
                           ),
                           SizedBox(

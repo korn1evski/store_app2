@@ -3,11 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:store_app/core/colors.dart';
+import 'package:store_app/presentation/manager/detail_page/detail_page_cubit.dart';
 import 'package:store_app/presentation/manager/review_page/review_page_cubit.dart';
 import 'package:store_app/presentation/widgets/add_button.dart';
 import 'package:store_app/presentation/widgets/common_text.dart';
+import 'package:store_app/presentation/widgets/positioned_loading.dart';
 import 'package:store_app/presentation/widgets/review_page/text_area.dart';
+import 'package:store_app/presentation/widgets/show_my_dialog.dart';
 import '../widgets/guest_form_page/stars.dart';
+import 'package:store_app/injection_container.dart' as di;
 
 class ReviewPage extends StatefulWidget {
   final String image;
@@ -40,8 +44,10 @@ class _ReviewPageState extends State<ReviewPage> {
   Widget build(BuildContext context) {
     int starsReview = -1;
     int maxCharacters = 30;
-    return BlocProvider<ReviewPageCubit>(create: (context) => ReviewPageCubit(),
-      child:  Scaffold(
+    bool isLoading = false;
+    return BlocProvider<ReviewPageCubit>(
+        create: (context) => ReviewPageCubit(),
+        child: Scaffold(
           body: Stack(children: [
             Container(
                 padding: EdgeInsets.only(left: 16, top: 19, right: 16),
@@ -74,7 +80,8 @@ class _ReviewPageState extends State<ReviewPage> {
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(4),
                                       image: DecorationImage(
-                                          image: imageProvider, fit: BoxFit.cover)),
+                                          image: imageProvider,
+                                          fit: BoxFit.cover)),
                                 );
                               },
                               placeholder: (context, url) =>
@@ -151,27 +158,10 @@ class _ReviewPageState extends State<ReviewPage> {
                         SizedBox(
                           height: 16,
                         ),
-                        // TextField(
-                        //   onChanged: (value) {
-                        //     BlocProvider.of<ReviewPageCubit>(context)
-                        //         .setReview(starsReview, value.length);
-                        //   },
-                        //   maxLength: maxCharacters,
-                        //   controller: textarea,
-                        //   keyboardType: TextInputType.multiline,
-                        //   maxLines: 4,
-                        //   decoration: InputDecoration(
-                        //     hintText:
-                        //         'Would you like to write anything about this product?',
-                        //     border: OutlineInputBorder(
-                        //         borderSide:
-                        //             BorderSide(width: 1, color: AppColors.grey3)),
-                        //     focusedBorder: OutlineInputBorder(
-                        //         borderSide:
-                        //             BorderSide(width: 1, color: AppColors.grey3)),
-                        //   ),
-                        // ),
-                        TextArea(starsReview: starsReview, maxCharacters: maxCharacters, textarea: textarea),
+                        TextArea(
+                            starsReview: starsReview,
+                            maxCharacters: maxCharacters,
+                            textarea: textarea),
                         Padding(
                           padding: const EdgeInsets.only(top: 4, bottom: 44),
                           child: BlocBuilder<ReviewPageCubit, ReviewPageState>(
@@ -193,7 +183,27 @@ class _ReviewPageState extends State<ReviewPage> {
                             }
                           }),
                         ),
-                        AddButton(text: 'SUBMIT REVIEW', width: double.maxFinite, height: 52,)
+                        AddButton(
+                          text: 'SUBMIT REVIEW',
+                          width: double.maxFinite,
+                          height: 52,
+                          onTap: () {
+                            if (starsReview == -1) {
+                              showMyDialog(context, 'Alert', 'Rate a product',
+                                  'ok', AppColors.green1);
+                            } else if (textarea.text.trim() == '') {
+                              showMyDialog(context, 'Alert', 'Write a review',
+                                  'ok', AppColors.green1);
+                            } else {
+                              BlocProvider.of<DetailPageCubit>(context)
+                                  .prepareReview(
+                                      context: context,
+                                      productId: widget.productId,
+                                      message: textarea.text,
+                                      starsReview: starsReview);
+                            }
+                          },
+                        )
                       ],
                     )
                   ],
@@ -210,8 +220,8 @@ class _ReviewPageState extends State<ReviewPage> {
               width: 6,
               height: 12,
             ),
+            PositionedLoading(isVisible: isLoading)
           ]),
-        )
-    );
+        ));
   }
 }

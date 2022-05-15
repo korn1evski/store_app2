@@ -6,7 +6,7 @@ class GetAccountInfoUseCase {
   final UsersRepository repository;
   GetAccountInfoUseCase({required this.repository});
 
-  Future<AccountInfoEntity> call(String accessToken) async {
-    return repository.accountInfo(accessToken);
+  Future<AccountInfoEntity?> call() async {
+    return repository.accountInfo();
   }
 }

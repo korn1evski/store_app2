@@ -7,7 +7,16 @@ import 'content_detail_page.dart';
 
 class StructureDetailPage extends StatelessWidget {
   const StructureDetailPage(
-      {Key? key, required this.mainImage, required this.id, required this.images, required this.productName, required this.productSize, required this.productDetails, required this.reviews, required this.price, required this.productColor})
+      {Key? key,
+      required this.mainImage,
+      required this.id,
+      required this.images,
+      required this.productName,
+      required this.productSize,
+      required this.productDetails,
+      required this.reviews,
+      required this.price,
+      required this.productColor})
       : super(key: key);
   final String mainImage;
   final int id;
@@ -18,7 +27,6 @@ class StructureDetailPage extends StatelessWidget {
   final String productDetails;
   final List<Review> reviews;
   final double price;
-
 
   @override
   Widget build(BuildContext context) {
@@ -31,9 +39,13 @@ class StructureDetailPage extends StatelessWidget {
               child: Column(
                 children: [
                   TopDetailPage(
-                      productImg: mainImage,
-                      productId: id,
-                      images: images),
+                    productImg: mainImage,
+                    productId: id,
+                    images: images,
+                    price: price,
+                    details: productDetails,
+                    name: productName,
+                  ),
                   ContentDetailPage(
                     productId: id,
                     productName: productName,

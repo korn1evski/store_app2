@@ -6,7 +6,7 @@ import 'package:store_app/domain/use_cases/get_account_info.dart';
 import 'package:store_app/domain/use_cases/get_product_by_id_usecase.dart';
 import 'package:store_app/domain/use_cases/get_shared_string_usecase.dart';
 import 'package:store_app/domain/use_cases/verify_login_usecase.dart';
-import 'package:store_app/presentation/manager/review_page/review_page_cubit.dart';
+import 'package:store_app/presentation/manager/feed_back/feedback_cubit.dart';
 import '../../../domain/entities/account_info_entity.dart';
 import '../../../domain/use_cases/send_review_usecase.dart';
 import '../guest_review/guest_review_cubit.dart';
@@ -47,6 +47,7 @@ class DetailPageCubit extends Cubit<DetailPageState> {
         message: message,
         img: imageLink);
     Navigator.pop(context);
+    BlocProvider.of<FeedbackCubit>(context).loading(false);
 
     updateDetailPage(id);
     BlocProvider.of<GuestReviewCubit>(context).upgradeInitial(false);

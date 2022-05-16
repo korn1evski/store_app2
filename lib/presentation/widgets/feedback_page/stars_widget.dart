@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:store_app/core/colors.dart';
+import 'package:store_app/presentation/manager/feed_back/feedback_cubit.dart';
 import 'package:store_app/presentation/widgets/common_text.dart';
 
-class Stars extends StatelessWidget {
-  const Stars({Key? key, required this.selectedStar, required this.textLength}) : super(key: key);
+class StarsWidget extends StatelessWidget {
+  const StarsWidget({Key? key, required this.selectedStar}) : super(key: key);
   final int selectedStar;
-  final int textLength;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class Stars extends StatelessWidget {
       children: [
         ...stars.map((e) =>
             GestureDetector(child: e, onTap: () {
-              // BlocProvider.of<GuestReviewCubit>(context).setReview(stars.indexOf(e));
+              BlocProvider.of<FeedbackCubit>(context).setStars(stars.indexOf(e));
             },)).toList()
       ],
     );

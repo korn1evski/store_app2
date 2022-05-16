@@ -17,4 +17,15 @@ class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
     prefs.setString(key, value);
   }
 
+  @override
+  List<String>? getSharedStringList(String key) {
+    return prefs.getStringList(key);
+  }
+
+  @override
+  Future<void> setSharedStringList(String key, List<String> value) {
+    return prefs.setStringList(key, value);
+  }
+
+
 }

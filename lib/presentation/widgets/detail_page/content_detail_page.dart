@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:readmore/readmore.dart';
 import 'package:store_app/core/colors.dart';
-import 'package:store_app/presentation/pages/guest_form_page.dart';
-import 'package:store_app/presentation/pages/review_page.dart';
+import 'package:store_app/presentation/pages/feedback_page.dart';
 import 'package:store_app/presentation/widgets/detail_page/review_widget.dart';
 
 import '../../../data/remote/models/id_product_model.dart';
@@ -91,7 +90,7 @@ class ContentDetailPage extends StatelessWidget {
           ),
           GestureDetector(
             onTap: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context) => ReviewPage(productId: productId, image: image, name: productName, details: productDetails)));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => FeedBackPage(productId: productId, image: image, name: productName, details: productDetails)));
             },
             child: Padding(
               padding: const EdgeInsets.only(top: 8, bottom: 0),

@@ -25,11 +25,13 @@ import 'package:store_app/domain/use_cases/get_categories_data_usecase.dart';
 import 'package:store_app/domain/use_cases/get_favorites_usecase.dart';
 import 'package:store_app/domain/use_cases/get_product_by_id_usecase.dart';
 import 'package:store_app/domain/use_cases/get_result_data_usecase.dart';
+import 'package:store_app/domain/use_cases/get_shared_string_list_usecase.dart';
 import 'package:store_app/domain/use_cases/get_shared_string_usecase.dart';
 import 'package:store_app/domain/use_cases/insert_favorite_usecase.dart';
 import 'package:store_app/domain/use_cases/login_usecase.dart';
 import 'package:store_app/domain/use_cases/register_user_usecase.dart';
 import 'package:store_app/domain/use_cases/send_review_usecase.dart';
+import 'package:store_app/domain/use_cases/set_shared_string_list_usecase.dart';
 import 'package:store_app/domain/use_cases/set_shared_string_usecase.dart';
 import 'package:store_app/domain/use_cases/upload_image_usecase.dart';
 import 'package:store_app/domain/use_cases/verify_login_usecase.dart';
@@ -38,12 +40,13 @@ import 'package:store_app/presentation/manager/all_favorites/all_favorites_cubit
 import 'package:store_app/presentation/manager/all_products/all_products_cubit.dart';
 import 'package:store_app/presentation/manager/detail_page/detail_page_cubit.dart';
 import 'package:store_app/presentation/manager/favorites_main/favorites_main_cubit.dart';
+import 'package:store_app/presentation/manager/feed_back/feedback_cubit.dart';
 import 'package:store_app/presentation/manager/guest_review/guest_review_cubit.dart';
 import 'package:store_app/presentation/manager/intro/intro_cubit.dart';
 import 'package:store_app/presentation/manager/login/login_cubit.dart';
 import 'package:store_app/presentation/manager/manage_favorite/manage_favorite_cubit.dart';
+import 'package:store_app/presentation/manager/prefs/prefs_cubit.dart';
 import 'package:store_app/presentation/manager/register/register_cubit.dart';
-import 'package:store_app/presentation/manager/review_page/review_page_cubit.dart';
 import 'package:store_app/presentation/manager/search_page/search_page_cubit.dart';
 
 GetIt sl = GetIt.instance;
@@ -57,16 +60,17 @@ Future<void> init() async {
 
   sl.registerFactory<SearchPageCubit>(() => SearchPageCubit(getAllProductsUseCase: sl.call()));
   sl.registerFactory<AllFavoritesCubit>(() => AllFavoritesCubit(getFavoritesUseCase: sl.call()));
-  sl.registerFactory<AllProductsCubit>(() => AllProductsCubit(getCategoriesDataUseCase: sl.call(), getResultDataUseCase: sl.call()));
+  sl.registerFactory<AllProductsCubit>(() => AllProductsCubit(getCategoriesDataUseCase: sl.call(), getResultDataUseCase: sl.call(), getSharedStringListUseCase: sl.call()));
   sl.registerFactory<FavoritesMainCubit>(() => FavoritesMainCubit());
   sl.registerFactory<DetailPageCubit>(() => DetailPageCubit(getProductByIdUseCase: sl.call(), sendReviewUseCase: sl.call(), getAccountInfoUseCase: sl.call(), getSharedStringUseCase: sl.call(), verifyLoginUseCase: sl.call()));
   sl.registerFactory<GuestReviewCubit>(() => GuestReviewCubit(uploadImageUseCase: sl.call()));
-  sl.registerFactory<ReviewPageCubit>(() => ReviewPageCubit());
   sl.registerFactory<RegisterCubit>(() => RegisterCubit(registerUserUseCase: sl.call()));
   sl.registerFactory<LoginCubit>(() => LoginCubit(loginUseCase: sl.call()));
   sl.registerFactory<IntroCubit>(() => IntroCubit(verifyLoginUseCase: sl.call(), setSharedStringUseCase: sl.call(), getSharedStringUseCase: sl.call()));
   sl.registerFactory<AccountCubit>(() => AccountCubit(verifyLoginUseCase: sl.call(), getAccountInfoUseCase: sl.call(), getSharedStringUseCase: sl.call(), setSharedStringUseCase: sl.call()));
   sl.registerFactory<ManageFavoriteCubit>(() => ManageFavoriteCubit(deleteFavoriteUseCase: sl.call(), insertFavoriteUseCase: sl.call()));
+  sl.registerFactory<FeedbackCubit>(() => FeedbackCubit());
+  sl.registerFactory<PrefsCubit>(() => PrefsCubit(getSharedStringListUseCase: sl.call(), getSharedStringUseCase: sl.call(), setSharedStringListUseCase: sl.call()));
 
   sl.registerLazySingleton<SharedPreferences>(() => prefs);
   sl.registerLazySingleton<Dio>(() => authDio);
@@ -87,6 +91,8 @@ Future<void> init() async {
   sl.registerLazySingleton<DeleteFavoriteUseCase>(() => DeleteFavoriteUseCase(favoritesRepository: sl.call()));
   sl.registerLazySingleton<InsertFavoriteUseCase>(() => InsertFavoriteUseCase(favoritesRepository: sl.call()));
   sl.registerLazySingleton<GetFavoritesUseCase>(() => GetFavoritesUseCase(favoritesRepository: sl.call()));
+  sl.registerLazySingleton<GetSharedStringListUseCase>(() => GetSharedStringListUseCase(authRepository: sl.call()));
+  sl.registerLazySingleton<SetSharedStringListUseCase>(() => SetSharedStringListUseCase(authRepository: sl.call()));
 
 
 

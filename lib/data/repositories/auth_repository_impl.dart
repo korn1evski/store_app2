@@ -12,4 +12,10 @@ class AuthRepositoryImpl extends AuthRepository {
   @override
   Future<void> setSharedString(String key, String value) async => authRemoteDataSource.setSharedString(key, value);
 
+  @override
+  List<String>? getSharedStringList(String key) => authRemoteDataSource.getSharedStringList(key);
+
+  @override
+  Future<void> setSharedStringList(String key, List<String> value) async => authRemoteDataSource.setSharedStringList(key, value);
+
 }

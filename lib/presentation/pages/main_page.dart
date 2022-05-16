@@ -3,6 +3,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:store_app/domain/entities/category_entity.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:store_app/presentation/manager/all_products/all_products_cubit.dart';
+import 'package:store_app/presentation/manager/prefs/prefs_cubit.dart';
 import 'package:store_app/presentation/manager/view_models/product_viewmodel.dart';
 import 'package:store_app/presentation/manager/favorites_main/favorites_main_cubit.dart';
 import 'package:store_app/presentation/widgets/common_text.dart';
@@ -10,8 +11,6 @@ import '../widgets/category.dart';
 import '../widgets/main_page/top_main_page.dart';
 import '../widgets/product.dart';
 import 'detail_page.dart';
-import 'package:store_app/injection_container.dart' as di;
-import 'package:shared_preferences/shared_preferences.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -25,7 +24,6 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin,  Aut
   RefreshController(initialRefresh: false);
   late int currentPage;
   List<ProductViewModel> products = [];
-  var prefs = di.sl<SharedPreferences>();
   late var totalPages;
   late var isFavorite;
   late List<CategoryEntity> categories;
@@ -140,10 +138,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin,  Aut
                                           child: BlocConsumer(
                                             bloc: BlocProvider.of<FavoritesMainCubit>(context),
                                             builder: (context, state) {
-                                              List<String>? listString = prefs.getStringList('favorites');
-                                              if( listString == null){
-                                                listString = <String>[];
-                                              }
+                                              List<String>? listString = BlocProvider.of<PrefsCubit>(context).getStringList('favorites');
+                                              listString ??= <String>[];
                                               isFavorite = listString.contains(products[index].id.toString())
                                                   ? true : false;
                                               return Product(
@@ -157,10 +153,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin,  Aut
                                               );
                                             },
                                             listener: (context, state){
-                                              isFavorite =
-                                              prefs.getStringList('favorites')!.contains(products[index].id.toString())
-                                                  ? true
-                                                  : false;
+                                              isFavorite = BlocProvider.of<PrefsCubit>(context).isFavorite((products[index].id.toString()));
                                             },
                                           ),
                                         );

@@ -4,16 +4,18 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:store_app/domain/entities/category_entity.dart';
 import 'package:store_app/domain/use_cases/get_categories_data_usecase.dart';
 import 'package:store_app/domain/use_cases/get_result_data_usecase.dart';
+import 'package:store_app/domain/use_cases/get_shared_string_list_usecase.dart';
 import 'package:store_app/presentation/manager/view_models/product_viewmodel.dart';
 
 part 'all_products_state.dart';
 
 class AllProductsCubit extends Cubit<AllProductsState> {
-  AllProductsCubit({required this.getCategoriesDataUseCase, required this.getResultDataUseCase}) : super(AllProductsInitial());
+  AllProductsCubit({required this.getCategoriesDataUseCase, required this.getResultDataUseCase, required this.getSharedStringListUseCase}) : super(AllProductsInitial());
 
 
   final GetCategoriesDataUseCase getCategoriesDataUseCase;
   final GetResultDataUseCase getResultDataUseCase;
+  final GetSharedStringListUseCase getSharedStringListUseCase;
   late var productsEntity;
   late var categories;
   late var totalPages;
@@ -81,5 +83,4 @@ class AllProductsCubit extends Cubit<AllProductsState> {
       controller.refreshFailed();
     }
   }
-
 }

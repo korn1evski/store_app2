@@ -2,13 +2,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:store_app/core/colors.dart';
 import 'package:store_app/data/remote/models/id_product_model.dart';
-import 'package:store_app/injection_container.dart' as di;
 import 'package:store_app/presentation/manager/favorites_main/favorites_main_cubit.dart';
 import 'package:store_app/presentation/manager/manage_favorite/manage_favorite_cubit.dart';
+import 'package:store_app/presentation/manager/prefs/prefs_cubit.dart';
 
 import '../../manager/all_favorites/all_favorites_cubit.dart';
 import '../favorite_circle.dart';
@@ -31,7 +30,6 @@ class TopDetailPage extends StatefulWidget {
         required this.price
       })
       : super(key: key);
-  final prefs = di.sl<SharedPreferences>();
 
   @override
   State<TopDetailPage> createState() => _TopDetailPageState();
@@ -48,7 +46,7 @@ class _TopDetailPageState extends State<TopDetailPage> {
     for (var temp in widget.images) {
       imgList.add(temp.image);
     }
-    List<String>? mayBeNullList = widget.prefs.getStringList('favorites');
+    List<String>? mayBeNullList = BlocProvider.of<PrefsCubit>(context).getStringList('favorites');
     List<String> favoritesList;
     if (mayBeNullList == null) {
       favoritesList = <String>[];
@@ -147,7 +145,7 @@ class _TopDetailPageState extends State<TopDetailPage> {
                             }
                             BlocProvider.of<AllFavoritesCubit>(context)
                                 .getProducts();
-                            widget.prefs.setStringList('favorites', favoritesList);
+                            BlocProvider.of<PrefsCubit>(context).setStringList('favorites', favoritesList);
                           },
                           child: FavoriteCircle(
                             width: 17,

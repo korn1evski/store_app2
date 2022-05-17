@@ -1,11 +1,8 @@
 import 'package:store_app/data/remote/data_sources/users_remote_data_source.dart';
-
 import 'package:http/http.dart' as http;
-import 'package:store_app/data/remote/dio_config.dart';
 import 'package:store_app/data/remote/models/login_response_model.dart';
 import 'package:store_app/data/remote/models/refresh_response_model.dart';
 import 'package:dio/dio.dart';
-import 'package:store_app/injection_container.dart' as di;
 
 import '../../../domain/entities/account_info_entity.dart';
 

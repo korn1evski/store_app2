@@ -20,7 +20,7 @@ class SwaggerRemoteDataSourceImpl extends SwaggerRemoteDataSource {
   final String baseUrl = 'http://mobile-shop-api.hiring.devebs.net';
 
   @override
-  Future<List<CategoryEntity>> getCategoriesData() async {
+  Future<List<CategoryEntity>?> getCategoriesData() async {
     const String apiURl = '/categories';
     http.Response response = await http.get(Uri.parse(baseUrl + apiURl));
 
@@ -29,15 +29,15 @@ class SwaggerRemoteDataSourceImpl extends SwaggerRemoteDataSource {
         final CategoriesModel result = CategoriesModelFromJson(response.body);
         return result.categoriesModels;
       } else {
-        return <CategoryEntity>[];
+        return null;
       }
     } catch (e) {
-      return <CategoryEntity>[];
+      return null;
     }
   }
 
   @override
-  Future<ProductsEntity> getResultData(int currentPage) async {
+  Future<ProductsEntity?> getResultData(int currentPage) async {
     final String apiURl =
         "/products?page=" + currentPage.toString() + "&page_size=10";
     http.Response response = await http.get(Uri.parse(baseUrl + apiURl));
@@ -47,23 +47,15 @@ class SwaggerRemoteDataSourceImpl extends SwaggerRemoteDataSource {
         final result = productsFromJson(response.body);
         return result;
       } else {
-        List<ProductEntity> list = [];
-        return ProductsEntity(
-            count: 0,
-            totalPages: 0,
-            perPage: 0,
-            currentPage: 0,
-            products: list);
+        return null;
       }
     } catch (e) {
-      List<ProductEntity> list = [];
-      return ProductsEntity(
-          count: 0, totalPages: 0, perPage: 0, currentPage: 0, products: list);
+      return null;
     }
   }
 
   @override
-  Future<IdProductEntity> getProductById(int id) async {
+  Future<IdProductEntity?> getProductById(int id) async {
     String apiUrl = '/products/$id';
     http.Response response = await http.get(Uri.parse(baseUrl + apiUrl));
 
@@ -72,35 +64,15 @@ class SwaggerRemoteDataSourceImpl extends SwaggerRemoteDataSource {
         final idProductEntity = idProductFromJson(response.body);
         return idProductEntity;
       } else {
-        return IdProductEntity(
-            category: CategoryEntity(name: '', icon: ''),
-            name: '',
-            details: '',
-            size: '',
-            colour: '',
-            price: 0,
-            id: -1,
-            mainImage: '',
-            images: <ImageWrapper>[],
-            reviews: <Review>[]);
+        return null;
       }
     } catch (e) {
-      return IdProductEntity(
-          category: CategoryEntity(name: '', icon: ''),
-          name: '',
-          details: '',
-          size: '',
-          colour: '',
-          price: 0,
-          id: -1,
-          mainImage: '',
-          images: <ImageWrapper>[],
-          reviews: <Review>[]);
+      return null;
     }
   }
 
   @override
-  Future<List<ProductEntity>> getAllProducts() async {
+  Future<List<ProductEntity>?> getAllProducts() async {
     const String apiUrl = '/products?page_size=100000';
     http.Response response = await http.get(Uri.parse(baseUrl + apiUrl));
 
@@ -109,10 +81,10 @@ class SwaggerRemoteDataSourceImpl extends SwaggerRemoteDataSource {
         final ProductsEntity productsEntity = productsFromJson(response.body);
         return productsEntity.products;
       } else {
-        return <ProductEntity>[];
+        return null;
       }
     } catch (e) {
-      return <ProductEntity>[];
+      return null;
     }
   }
 

@@ -7,7 +7,7 @@ class GetAllProductsUseCase {
 
   GetAllProductsUseCase({required this.repository});
 
-  Future<List<ProductEntity>> call(){
+  Future<List<ProductEntity>?> call(){
     return repository.getAllProducts();
   }
 

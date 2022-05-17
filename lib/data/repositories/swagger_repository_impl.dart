@@ -13,19 +13,19 @@ class SwaggerRepositoryImpl extends SwaggerRepository {
   SwaggerRepositoryImpl({required this.swaggerRemoteDataSource});
 
   @override
-  Future<List<CategoryEntity>> getCategoriesData() async =>
+  Future<List<CategoryEntity>?> getCategoriesData() async =>
       swaggerRemoteDataSource.getCategoriesData();
 
   @override
-  Future<ProductsEntity> getResultData(int currentPage) async =>
+  Future<ProductsEntity?> getResultData(int currentPage) async =>
       swaggerRemoteDataSource.getResultData(currentPage);
 
   @override
-  Future<IdProductEntity> getProductById(int id) async =>
+  Future<IdProductEntity?> getProductById(int id) async =>
       swaggerRemoteDataSource.getProductById(id);
 
   @override
-  Future<List<ProductEntity>> getAllProducts() async =>
+  Future<List<ProductEntity>?> getAllProducts() async =>
       swaggerRemoteDataSource.getAllProducts();
 
   @override

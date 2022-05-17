@@ -7,7 +7,7 @@ class GetCategoriesDataUseCase {
 
   GetCategoriesDataUseCase({required this.repository});
 
-  Future<List<CategoryEntity>> call(){
+  Future<List<CategoryEntity>?> call(){
     return repository.getCategoriesData();
   }
 }

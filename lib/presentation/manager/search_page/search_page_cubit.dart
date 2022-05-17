@@ -15,7 +15,9 @@ class SearchPageCubit extends Cubit<SearchPageState> {
 
   void getProductsForSearch() async{
     var temp = await getAllProductsUseCase.call();
-    products = ProductViewModel.fromEntityList(temp);
+    if(temp != null) {
+      products = ProductViewModel.fromEntityList(temp);
+    }
 
     emit(GetProductsForSearchState(products: products));
   }

@@ -8,7 +8,7 @@ class GetProductByIdUseCase {
   final SwaggerRepository repository;
   GetProductByIdUseCase({required this.repository});
 
-  Future<IdProductEntity> call(int id){
+  Future<IdProductEntity?> call(int id){
     return repository.getProductById(id);
   }
 }

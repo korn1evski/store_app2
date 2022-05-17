@@ -44,7 +44,7 @@ class DetailPageCubit extends Cubit<DetailPageState> {
         firstName: firstName,
         lastName: lastName,
         rating: rating,
-        message: message,
+        message: message.trim(),
         img: imageLink);
     Navigator.pop(context);
     BlocProvider.of<FeedbackCubit>(context).loading(false);

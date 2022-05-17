@@ -11,8 +11,7 @@ class AllProductsInitial extends AllProductsState {
 
 class MainLoadingState extends AllProductsState {
   @override
-  // TODO: implement props
-  List<Object?> get props => throw UnimplementedError();
+  List<Object?> get props => [];
 
 }
 

@@ -49,6 +49,7 @@ dependencies:
   drift:
   sqlite3_flutter_libs:
   path:
+  get:
 
 
   # The following adds the Cupertino Icons font to your application.

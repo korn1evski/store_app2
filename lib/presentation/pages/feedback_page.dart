@@ -40,6 +40,12 @@ class _FeedBackPageState extends State<FeedBackPage> {
   }
 
   @override
+  void initState(){
+    super.initState();
+    BlocProvider.of<FeedbackCubit>(context).loading(false);
+  }
+
+  @override
   Widget build(BuildContext context) {
     int starsReview = -1;
     int maxCharacters = 30;
@@ -47,7 +53,7 @@ class _FeedBackPageState extends State<FeedBackPage> {
       body: Stack(
         children: [
           Container(
-            padding: EdgeInsets.only(left: 16, top: 19, right: 16),
+            padding: const EdgeInsets.only(left: 16, top: 19, right: 16),
             child: ListView(
               children: [
                 Column(
@@ -132,9 +138,9 @@ class _FeedBackPageState extends State<FeedBackPage> {
                         builder: (context, state) {
                       if (state is FeedBackRefreshState) {
                         starsReview = state.starsCount;
-                        return StarsWidget(selectedStar: starsReview);
+                        return StarsWidget(selectedStar: starsReview, foo: (value){ BlocProvider.of<FeedbackCubit>(context).setStars(value);});
                       } else {
-                        return StarsWidget(selectedStar: -1);
+                        return StarsWidget(selectedStar: -1, foo: (value){ BlocProvider.of<FeedbackCubit>(context).setStars(value);});
                       }
                     }),
                     SizedBox(
@@ -149,7 +155,6 @@ class _FeedBackPageState extends State<FeedBackPage> {
                       height: 16,
                     ),
                     TextArea(
-                      starsReview: starsReview,
                       maxCharacters: maxCharacters,
                       textarea: textArea,
                       onChanged: (String value) {

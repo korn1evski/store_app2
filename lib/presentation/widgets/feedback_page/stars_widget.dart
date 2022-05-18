@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:store_app/core/colors.dart';
-import 'package:store_app/presentation/manager/feed_back/feedback_cubit.dart';
 import 'package:store_app/presentation/widgets/common_text.dart';
 
 class StarsWidget extends StatelessWidget {
-  const StarsWidget({Key? key, required this.selectedStar}) : super(key: key);
+  const StarsWidget({Key? key, required this.selectedStar, required this.foo}) : super(key: key);
   final int selectedStar;
+  final void Function(int value) foo;
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +28,9 @@ class StarsWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         ...stars.map((e) =>
-            GestureDetector(child: e, onTap: () {
-              BlocProvider.of<FeedbackCubit>(context).setStars(stars.indexOf(e));
-            },)).toList()
+            GestureDetector(child: e, onTap: (){
+              foo(stars.indexOf(e));
+            })).toList()
       ],
     );
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:store_app/presentation/manager/account/account_cubit.dart';
 import 'package:store_app/presentation/manager/all_favorites/all_favorites_cubit.dart';
 import 'package:store_app/presentation/manager/all_products/all_products_cubit.dart';
@@ -54,7 +55,7 @@ class MyApp extends StatelessWidget {
           BlocProvider<FeedbackCubit>(create: (_) => di.sl<FeedbackCubit>()),
           BlocProvider<PrefsCubit>(create: (_) => di.sl<PrefsCubit>())
         ],
-        child: MaterialApp(
+        child: GetMaterialApp(
             debugShowCheckedModeBanner: false,
             title: 'MyStore',
             home: IntroPage()));

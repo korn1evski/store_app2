@@ -38,6 +38,7 @@ import 'package:store_app/domain/use_cases/verify_login_usecase.dart';
 import 'package:store_app/presentation/manager/account/account_cubit.dart';
 import 'package:store_app/presentation/manager/all_favorites/all_favorites_cubit.dart';
 import 'package:store_app/presentation/manager/all_products/all_products_cubit.dart';
+import 'package:store_app/presentation/manager/controllers/feedback_controller.dart';
 import 'package:store_app/presentation/manager/detail_page/detail_page_cubit.dart';
 import 'package:store_app/presentation/manager/favorites_main/favorites_main_cubit.dart';
 import 'package:store_app/presentation/manager/feed_back/feedback_cubit.dart';
@@ -48,6 +49,7 @@ import 'package:store_app/presentation/manager/manage_favorite/manage_favorite_c
 import 'package:store_app/presentation/manager/prefs/prefs_cubit.dart';
 import 'package:store_app/presentation/manager/register/register_cubit.dart';
 import 'package:store_app/presentation/manager/search_page/search_page_cubit.dart';
+import 'package:get/get.dart';
 
 GetIt sl = GetIt.instance;
 
@@ -76,6 +78,8 @@ Future<void> init() async {
   sl.registerLazySingleton<Dio>(() => authDio);
   sl.registerLazySingleton<ShopDb>(() => ShopDb());
 
+  Get.lazyPut(() => FeedBackController());
+
   sl.registerLazySingleton<GetResultDataUseCase>(() => GetResultDataUseCase(repository: sl.call()));
   sl.registerLazySingleton<GetCategoriesDataUseCase>(() => GetCategoriesDataUseCase(repository: sl.call()));
   sl.registerLazySingleton<GetAllProductsUseCase>(() => GetAllProductsUseCase(repository: sl.call()));
@@ -93,8 +97,6 @@ Future<void> init() async {
   sl.registerLazySingleton<GetFavoritesUseCase>(() => GetFavoritesUseCase(favoritesRepository: sl.call()));
   sl.registerLazySingleton<GetSharedStringListUseCase>(() => GetSharedStringListUseCase(authRepository: sl.call()));
   sl.registerLazySingleton<SetSharedStringListUseCase>(() => SetSharedStringListUseCase(authRepository: sl.call()));
-
-
 
   sl.registerLazySingleton<SwaggerRepository>(() => SwaggerRepositoryImpl(swaggerRemoteDataSource: sl.call()));
   sl.registerLazySingleton<UsersRepository>(() => UsersRepositoryImpl(usersRemoteDataSource: sl.call()));

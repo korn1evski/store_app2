@@ -16,13 +16,13 @@ class MainLoadingState extends AllProductsState {
 }
 
 class MainLoadedState extends AllProductsState {
-  MainLoadedState({required this.products, required this.currentPage, required this.totalPages, required this.categories});
   final List<ProductViewModel> products;
   final List<CategoryEntity> categories;
   final int currentPage;
   final int totalPages;
+  const MainLoadedState({required this.products, required this.currentPage, required this.totalPages, required this.categories});
+
   @override
-  // TODO: implement props
   List<Object?> get props => [products, currentPage, categories];
 
 }

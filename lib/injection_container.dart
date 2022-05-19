@@ -4,6 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:store_app/data/local/data_bases/shop_db.dart';
 import 'package:store_app/data/local/data_sources/auth_remote_data_source.dart';
 import 'package:store_app/data/local/data_sources/auth_remote_data_source_impl.dart';
+import 'package:store_app/data/local/data_sources/cached_products_dao.dart';
+import 'package:store_app/data/local/data_sources/cached_products_data_source.dart';
 import 'package:store_app/data/local/data_sources/favorite_dao.dart';
 import 'package:store_app/data/local/data_sources/favorites_data_source.dart';
 import 'package:store_app/data/remote/data_sources/swagger_remote_data_source.dart';
@@ -11,22 +13,26 @@ import 'package:store_app/data/remote/data_sources/swagger_remote_data_source_im
 import 'package:store_app/data/remote/data_sources/users_remote_data_source.dart';
 import 'package:store_app/data/remote/data_sources/users_remote_data_source_impl.dart';
 import 'package:store_app/data/repositories/auth_repository_impl.dart';
+import 'package:store_app/data/repositories/cached_products_repository_impl.dart';
 import 'package:store_app/data/repositories/favorites_repository_impl.dart';
 import 'package:store_app/data/repositories/swagger_repository_impl.dart';
 import 'package:store_app/data/repositories/users_repository_impl.dart';
 import 'package:store_app/domain/repositories/auth_repository.dart';
+import 'package:store_app/domain/repositories/cached_products_repository.dart';
 import 'package:store_app/domain/repositories/favorites_repository.dart';
 import 'package:store_app/domain/repositories/swagger_repository.dart';
 import 'package:store_app/domain/repositories/users_repository.dart';
 import 'package:store_app/domain/use_cases/delete_favorite_usecase.dart';
 import 'package:store_app/domain/use_cases/get_account_info.dart';
 import 'package:store_app/domain/use_cases/get_all_products_usecase.dart';
+import 'package:store_app/domain/use_cases/get_cached_products_usecase.dart';
 import 'package:store_app/domain/use_cases/get_categories_data_usecase.dart';
 import 'package:store_app/domain/use_cases/get_favorites_usecase.dart';
 import 'package:store_app/domain/use_cases/get_product_by_id_usecase.dart';
 import 'package:store_app/domain/use_cases/get_result_data_usecase.dart';
 import 'package:store_app/domain/use_cases/get_shared_string_list_usecase.dart';
 import 'package:store_app/domain/use_cases/get_shared_string_usecase.dart';
+import 'package:store_app/domain/use_cases/insert_cached_product_usecase.dart';
 import 'package:store_app/domain/use_cases/insert_favorite_usecase.dart';
 import 'package:store_app/domain/use_cases/login_usecase.dart';
 import 'package:store_app/domain/use_cases/register_user_usecase.dart';
@@ -62,7 +68,7 @@ Future<void> init() async {
 
   sl.registerFactory<SearchPageCubit>(() => SearchPageCubit(getAllProductsUseCase: sl.call()));
   sl.registerFactory<AllFavoritesCubit>(() => AllFavoritesCubit(getFavoritesUseCase: sl.call()));
-  sl.registerFactory<AllProductsCubit>(() => AllProductsCubit(getCategoriesDataUseCase: sl.call(), getResultDataUseCase: sl.call(), getSharedStringListUseCase: sl.call()));
+  sl.registerFactory<AllProductsCubit>(() => AllProductsCubit(getCategoriesDataUseCase: sl.call(), getResultDataUseCase: sl.call(), getSharedStringListUseCase: sl.call(), insertCachedProductUseCase: sl.call(), getCachedProductsUseCase: sl.call()));
   sl.registerFactory<FavoritesMainCubit>(() => FavoritesMainCubit());
   sl.registerFactory<DetailPageCubit>(() => DetailPageCubit(getProductByIdUseCase: sl.call(), sendReviewUseCase: sl.call(), getAccountInfoUseCase: sl.call(), getSharedStringUseCase: sl.call(), verifyLoginUseCase: sl.call()));
   sl.registerFactory<GuestReviewCubit>(() => GuestReviewCubit(uploadImageUseCase: sl.call()));
@@ -97,16 +103,20 @@ Future<void> init() async {
   sl.registerLazySingleton<GetFavoritesUseCase>(() => GetFavoritesUseCase(favoritesRepository: sl.call()));
   sl.registerLazySingleton<GetSharedStringListUseCase>(() => GetSharedStringListUseCase(authRepository: sl.call()));
   sl.registerLazySingleton<SetSharedStringListUseCase>(() => SetSharedStringListUseCase(authRepository: sl.call()));
+  sl.registerLazySingleton<GetCachedProductsUseCase>(() => GetCachedProductsUseCase(cachedProductsRepository: sl.call()));
+  sl.registerLazySingleton<InsertCachedProductUseCase>(() => InsertCachedProductUseCase(cachedProductsRepository: sl.call()));
 
   sl.registerLazySingleton<SwaggerRepository>(() => SwaggerRepositoryImpl(swaggerRemoteDataSource: sl.call()));
   sl.registerLazySingleton<UsersRepository>(() => UsersRepositoryImpl(usersRemoteDataSource: sl.call()));
   sl.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(authRemoteDataSource: sl.call()));
   sl.registerLazySingleton<FavoritesRepository>(() => FavoritesRepositoryImpl(favoritesDataSource: sl.call()));
+  sl.registerLazySingleton<CachedProductsRepository>(() => CachedProductsRepositoryImpl(cachedProductsDataSource: sl.call()));
 
   sl.registerLazySingleton<SwaggerRemoteDataSource>(() => SwaggerRemoteDataSourceImpl());
   sl.registerLazySingleton<UsersRemoteDataSource>(() => UsersRemoteDataSourceImpl(authDio: authDio));
   sl.registerLazySingleton<AuthRemoteDataSource>(() => AuthRemoteDataSourceImpl());
   sl.registerLazySingleton<FavoritesDataSource>(() => FavoriteDao(sl.call()));
+  sl.registerLazySingleton<CachedProductsDataSource>(() => CachedProductsDao(sl.call()));
 
 
   configureAuthDio(dio: authDio, getSharedStringUseCase: sl.call());

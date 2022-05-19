@@ -18,14 +18,13 @@ class Product extends StatelessWidget {
 
   const Product(
       {Key? key,
-        required this.price,
-        required this.name,
-        required this.brand,
-        required this.imgPath,
-        required this.productId,
-        required this.isFavorite,
-        required this.isVisible
-      })
+      required this.price,
+      required this.name,
+      required this.brand,
+      required this.imgPath,
+      required this.productId,
+      required this.isFavorite,
+      required this.isVisible})
       : super(key: key);
 
   @override
@@ -36,16 +35,23 @@ class Product extends StatelessWidget {
       children: [
         Stack(
           children: [
-            Container(
-              height: 240,
-              width: 164,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(4),
-                image: DecorationImage(
-                  image: NetworkImage(imgPath),
-                  fit: BoxFit.cover,
-                ),
-              ),
+            CachedNetworkImage(
+              imageUrl: imgPath,
+              imageBuilder: (context, imageProvider) {
+                return Container(
+                  height: 240,
+                  width: 164,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4),
+                    image: DecorationImage(
+                      image: imageProvider,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                );
+              },
+              placeholder: (context, url) => CircularProgressIndicator(),
+              errorWidget: (context, url, error) => Icon(Icons.error)
             ),
             Positioned(
                 top: 0,
@@ -65,10 +71,7 @@ class Product extends StatelessWidget {
           height: 10,
         ),
         CommonText(
-            text: name,
-            size: 16,
-            font: 'SFPRODISPLAYMEDIUM',
-            numberOfLines: 1),
+            text: name, size: 16, font: 'SFPRODISPLAYMEDIUM', numberOfLines: 1),
         SizedBox(
           height: 6,
         ),
@@ -90,4 +93,3 @@ class Product extends StatelessWidget {
     );
   }
 }
-

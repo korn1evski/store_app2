@@ -56,7 +56,6 @@ class UsersRemoteDataSourceImpl extends UsersRemoteDataSource {
 
   @override
   Future<String> verifyLogin(String refreshToken) async{
-   try{
      final response = await http.post(Uri.parse(baseUrl + '/refresh'), body: {
        'refresh': refreshToken
      });
@@ -68,9 +67,6 @@ class UsersRemoteDataSourceImpl extends UsersRemoteDataSource {
      } else {
        return '';
      }
-   } catch(e){
-     return '';
-   }
   }
 
   @override

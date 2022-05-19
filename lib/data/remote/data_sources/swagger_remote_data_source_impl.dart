@@ -116,9 +116,10 @@ class SwaggerRemoteDataSourceImpl extends SwaggerRemoteDataSource {
 
   @override
   Future<String> uploadImage(File image) async{
-    Dio dio = new Dio();
+    Dio dio = Dio();
     try {
-      ByteData bytes = await rootBundle.load(image.path);
+      // ByteData bytes = await rootBundle.load(image.path);
+      final bytes = await image.readAsBytes();
       var buffer = bytes.buffer;
       var m = base64.encode(Uint8List.view(buffer));
 

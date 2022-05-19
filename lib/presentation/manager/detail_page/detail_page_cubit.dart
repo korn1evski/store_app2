@@ -63,7 +63,7 @@ class DetailPageCubit extends Cubit<DetailPageState> {
             lastName: nameArr[0],
             rating: starsReview + 1,
             message: message,
-            imageLink: 'string',
+            imageLink: accountEntity.profilePicture ?? 'string',
             context: context);
       } else {
         sendReview(id: productId,
@@ -71,7 +71,7 @@ class DetailPageCubit extends Cubit<DetailPageState> {
             lastName: 'default',
             rating: starsReview + 1,
             message: message,
-            imageLink: 'string',
+            imageLink: accountEntity.profilePicture ?? 'string',
             context: context);
       }
     }

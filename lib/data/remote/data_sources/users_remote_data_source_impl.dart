@@ -12,25 +12,25 @@ class UsersRemoteDataSourceImpl extends UsersRemoteDataSource {
   final Dio authDio;
 
   @override
-  Future<String> registerUser(String fullName, String email, String phoneNumber,
-      String password) async {
+  Future<int> registerUser(String fullName, String email, String phoneNumber,
+      String password, String profilePicture) async {
     try {
       final response = await http.post(Uri.parse(baseUrl + '/register'), body: {
         "full_name": fullName,
         "email": email,
         "password": password,
-        "phone_number": phoneNumber
+        "phone_number": phoneNumber,
+        "profile_picture": profilePicture
       });
       if(response.statusCode == 201){
-        return 'Now you are registered';
+        return 201;
       } else if (response.statusCode == 400){
-        return 'User with this email already exists';
+        return 400;
       } else {
-        return 'Error';
+        return 400;
       }
     } catch (e) {
-      print(e);
-      return 'Error';
+      return 400;
     }
   }
 
@@ -81,7 +81,7 @@ class UsersRemoteDataSourceImpl extends UsersRemoteDataSource {
       final response = await authDio.get(baseUrl + '/profile');
 
       if(response.statusCode == 200){
-        return AccountInfoEntity(id: response.data['id'], fullName: response.data['full_name'], email: response.data['email'], phoneNumber: response.data['phone_number']);
+        return AccountInfoEntity(id: response.data['id'], fullName: response.data['full_name'], email: response.data['email'], phoneNumber: response.data['phone_number'], profilePicture: response.data['profile_picture']);
       } else {
         return null;
       }

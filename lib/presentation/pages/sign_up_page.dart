@@ -9,6 +9,7 @@ import 'package:store_app/presentation/widgets/common_text.dart';
 import 'package:store_app/presentation/widgets/login_widgets/password_input.dart';
 import 'package:store_app/presentation/widgets/login_widgets/simple_input.dart';
 import 'package:store_app/presentation/widgets/my_checkbox.dart';
+import 'package:store_app/presentation/widgets/register_page/photo_upload_widget.dart';
 import '../../core/validation_functions.dart';
 import '../widgets/show_my_dialog.dart';
 
@@ -27,6 +28,12 @@ class _SignUpPageState extends State<SignUpPage> {
   TextEditingController repeatController = TextEditingController();
   GlobalKey<FormState> _formkey = GlobalKey<FormState>();
   bool isChecked = false;
+
+  @override
+  void initState(){
+    super.initState();
+    BlocProvider.of<RegisterCubit>(context).toInitial();
+  }
 
 
   @override
@@ -94,6 +101,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       color: AppColors.grey2,
                     ),
                   ),
+                  PhotoUploadWidget(),
                   Form(
                       key: _formkey,
                       child: Column(
@@ -188,7 +196,9 @@ class _SignUpPageState extends State<SignUpPage> {
                                         nameController.text,
                                         emailController.text,
                                         phoneController.text,
-                                        passwordController.text);
+                                        passwordController.text,
+                                        context
+                                );
                               }
                             },
                           ),

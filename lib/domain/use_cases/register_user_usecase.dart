@@ -5,7 +5,7 @@ class RegisterUserUseCase {
   final UsersRepository repository;
   RegisterUserUseCase({required this.repository});
 
-  Future<String> call(String fullName, String email, String phoneNumber, String password) async {
-    return repository.registerUser(fullName, email, phoneNumber, password);
+  Future<int> call(String fullName, String email, String phoneNumber, String password, String profilePicture) async {
+    return repository.registerUser(fullName, email, phoneNumber, password, profilePicture);
   }
 }

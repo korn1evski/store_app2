@@ -20,3 +20,12 @@ class RegistrationState extends RegisterState {
   @override
   List<Object> get props => [message];
 }
+
+class ProvideRegisterImageState extends RegisterState {
+  const ProvideRegisterImageState({required this.link, required this.image});
+  final String link;
+  final File image;
+  @override
+  List<Object> get props => [link, image];
+}
+

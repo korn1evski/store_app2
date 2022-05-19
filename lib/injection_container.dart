@@ -66,7 +66,7 @@ Future<void> init() async {
   sl.registerFactory<FavoritesMainCubit>(() => FavoritesMainCubit());
   sl.registerFactory<DetailPageCubit>(() => DetailPageCubit(getProductByIdUseCase: sl.call(), sendReviewUseCase: sl.call(), getAccountInfoUseCase: sl.call(), getSharedStringUseCase: sl.call(), verifyLoginUseCase: sl.call()));
   sl.registerFactory<GuestReviewCubit>(() => GuestReviewCubit(uploadImageUseCase: sl.call()));
-  sl.registerFactory<RegisterCubit>(() => RegisterCubit(registerUserUseCase: sl.call()));
+  sl.registerFactory<RegisterCubit>(() => RegisterCubit(registerUserUseCase: sl.call(), uploadImageUseCase: sl.call()));
   sl.registerFactory<LoginCubit>(() => LoginCubit(loginUseCase: sl.call()));
   sl.registerFactory<IntroCubit>(() => IntroCubit(verifyLoginUseCase: sl.call(), setSharedStringUseCase: sl.call(), getSharedStringUseCase: sl.call()));
   sl.registerFactory<AccountCubit>(() => AccountCubit(verifyLoginUseCase: sl.call(), getAccountInfoUseCase: sl.call(), getSharedStringUseCase: sl.call(), setSharedStringUseCase: sl.call()));

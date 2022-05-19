@@ -9,10 +9,10 @@ class UsersRepositoryImpl extends UsersRepository {
   UsersRepositoryImpl({required this.usersRemoteDataSource});
 
   @override
-  Future<String> registerUser(String fullName, String email, String phoneNumber,
-          String password) async =>
+  Future<int> registerUser(String fullName, String email, String phoneNumber,
+          String password, String profilePicture) async =>
       usersRemoteDataSource.registerUser(
-          fullName, email, phoneNumber, password);
+          fullName, email, phoneNumber, password, profilePicture);
 
   @override
   Future<List<String>> login(String email, String password) async => usersRemoteDataSource.login(email, password);

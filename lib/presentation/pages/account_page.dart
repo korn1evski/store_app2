@@ -45,7 +45,7 @@ class _AccountPageState extends State<AccountPage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      RoundedCachedImage(imgUrl: 'string', radius: 70),
+                      RoundedCachedImage(imgUrl: state.imgLink, radius: 70),
                       SizedBox(height: 20,),
                       CommonText(
                           text: state.fullName,

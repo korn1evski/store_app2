@@ -20,11 +20,12 @@ class AccountPageErrorState extends AccountState {
 }
 
 class AccountPageLoadedState extends AccountState {
-  AccountPageLoadedState({required this.fullName, required this.email, required this.phoneNumber});
+  AccountPageLoadedState({required this.fullName, required this.email, required this.phoneNumber, required this.imgLink});
   final String fullName;
   final String email;
   final String phoneNumber;
+  final String imgLink;
   @override
-  List<Object> get props => [fullName, email, phoneNumber];
+  List<Object> get props => [fullName, email, phoneNumber, imgLink];
 }
 

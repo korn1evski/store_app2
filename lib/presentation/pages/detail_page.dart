@@ -16,7 +16,7 @@ class _DetailPageState extends State<DetailPage> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       BlocProvider.of<DetailPageCubit>(context).loading();
       BlocProvider.of<DetailPageCubit>(context).getProduct(widget.productId);
     });

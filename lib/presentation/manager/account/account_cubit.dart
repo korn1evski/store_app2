@@ -2,7 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:store_app/domain/entities/account_info_entity.dart';
 import 'package:store_app/domain/use_cases/get_account_info.dart';
 import 'package:store_app/domain/use_cases/get_shared_string_usecase.dart';
@@ -30,7 +29,13 @@ class AccountCubit extends Cubit<AccountState> {
       if(accountInfoEntity == null){
         emit(AccountPageErrorState());
       } else {
-        emit(AccountPageLoadedState(fullName: accountInfoEntity.fullName, email: accountInfoEntity.email, phoneNumber: accountInfoEntity.phoneNumber));
+        late String imgLink;
+        if(accountInfoEntity.profilePicture == null){
+          imgLink = 'string';
+         } else {
+          imgLink = accountInfoEntity.profilePicture!;
+        }
+        emit(AccountPageLoadedState(fullName: accountInfoEntity.fullName, email: accountInfoEntity.email, phoneNumber: accountInfoEntity.phoneNumber, imgLink: imgLink));
       }
     }
   }

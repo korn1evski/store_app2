@@ -70,6 +70,20 @@ class UsersRemoteDataSourceImpl extends UsersRemoteDataSource {
   }
 
   @override
+  Future<String> verifyLoginForAccountInfo(String refreshToken) async {
+    final response = await authDio
+        .post(baseUrl + '/refresh', data: {'refresh': refreshToken});
+    if (response.statusCode == 200) {
+      final RefreshResponseModel result = RefreshResponseModel.fromJson(response.data);
+      return result.access;
+    } else if (response.statusCode == 401) {
+      return '';
+    } else {
+      return '';
+    }
+  }
+
+  @override
   Future<AccountInfoEntity?> accountInfo() async{
 
 

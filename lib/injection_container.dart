@@ -49,6 +49,7 @@ import 'package:store_app/domain/use_cases/send_review_usecase.dart';
 import 'package:store_app/domain/use_cases/set_shared_string_list_usecase.dart';
 import 'package:store_app/domain/use_cases/set_shared_string_usecase.dart';
 import 'package:store_app/domain/use_cases/upload_image_usecase.dart';
+import 'package:store_app/domain/use_cases/verify_login_for_account_info_usecase.dart';
 import 'package:store_app/domain/use_cases/verify_login_usecase.dart';
 import 'package:store_app/presentation/manager/account/account_cubit.dart';
 import 'package:store_app/presentation/manager/all_favorites/all_favorites_cubit.dart';
@@ -65,6 +66,8 @@ import 'package:store_app/presentation/manager/prefs/prefs_cubit.dart';
 import 'package:store_app/presentation/manager/register/register_cubit.dart';
 import 'package:store_app/presentation/manager/search_page/search_page_cubit.dart';
 import 'package:get/get.dart';
+
+import 'core/interceptors/auth_interceptor.dart';
 
 GetIt sl = GetIt.instance;
 
@@ -84,7 +87,7 @@ Future<void> init() async {
   sl.registerFactory<RegisterCubit>(() => RegisterCubit(registerUserUseCase: sl.call(), uploadImageUseCase: sl.call()));
   sl.registerFactory<LoginCubit>(() => LoginCubit(loginUseCase: sl.call(), setSharedStringUseCase: sl.call()));
   sl.registerFactory<IntroCubit>(() => IntroCubit(verifyLoginUseCase: sl.call(), setSharedStringUseCase: sl.call(), getSharedStringUseCase: sl.call()));
-  sl.registerFactory<AccountCubit>(() => AccountCubit(verifyLoginUseCase: sl.call(), getAccountInfoUseCase: sl.call(), getSharedStringUseCase: sl.call(), setSharedStringUseCase: sl.call()));
+  sl.registerFactory<AccountCubit>(() => AccountCubit(verifyLoginForAccountInfoUseCase: sl.call(), getAccountInfoUseCase: sl.call(), getSharedStringUseCase: sl.call(), setSharedStringUseCase: sl.call()));
   sl.registerFactory<ManageFavoriteCubit>(() => ManageFavoriteCubit(deleteFavoriteUseCase: sl.call(), insertFavoriteUseCase: sl.call()));
   sl.registerFactory<FeedbackCubit>(() => FeedbackCubit());
   sl.registerFactory<PrefsCubit>(() => PrefsCubit(getSharedStringListUseCase: sl.call(), getSharedStringUseCase: sl.call(), setSharedStringListUseCase: sl.call()));
@@ -116,6 +119,7 @@ Future<void> init() async {
   sl.registerLazySingleton<InsertCachedProductUseCase>(() => InsertCachedProductUseCase(cachedProductsRepository: sl.call()));
   sl.registerLazySingleton<InsertCachedCategoryUseCase>(() => InsertCachedCategoryUseCase(repository: sl.call()));
   sl.registerLazySingleton<GetCachedCategoriesUseCase>(() => GetCachedCategoriesUseCase(repository: sl.call()));
+  sl.registerLazySingleton<VerifyLoginForAccountInfoUseCase>(() => VerifyLoginForAccountInfoUseCase(repository: sl.call()));
 
   sl.registerLazySingleton<SwaggerRepository>(() => SwaggerRepositoryImpl(swaggerRemoteDataSource: sl.call()));
   sl.registerLazySingleton<UsersRepository>(() => UsersRepositoryImpl(usersRemoteDataSource: sl.call()));
@@ -139,17 +143,8 @@ Future<void> init() async {
 void configureAuthDio({required Dio dio, required GetSharedStringUseCase getSharedStringUseCase}) async{
   dio.interceptors.clear();
 
-  dio.interceptors.add(InterceptorsWrapper(onRequest: (options, handler) {
-    final accessToken = getSharedStringUseCase.call('accessToken');
-    if (accessToken != null || accessToken != '') {
-      options.headers['Authorization'] =
-          'Token $accessToken';
-      return handler.next(options);
-    } else {
-      return handler.next(options);
-    }
-  }));
-  
+  dio.interceptors.add(RetryOnConnectionChangeInterceptor(requestRetrier: DioConnectivityRequestRetrier(dio: dio, connectivity: Connectivity())));
+  dio.interceptors.add(AuthInterceptor(getSharedStringUseCase: getSharedStringUseCase));
 }
 
 void configureRetryDio({required Dio dio}){

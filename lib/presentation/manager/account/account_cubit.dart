@@ -6,21 +6,22 @@ import 'package:store_app/domain/entities/account_info_entity.dart';
 import 'package:store_app/domain/use_cases/get_account_info.dart';
 import 'package:store_app/domain/use_cases/get_shared_string_usecase.dart';
 import 'package:store_app/domain/use_cases/set_shared_string_usecase.dart';
+import 'package:store_app/domain/use_cases/verify_login_for_account_info_usecase.dart';
 import 'package:store_app/domain/use_cases/verify_login_usecase.dart';
 import 'package:store_app/presentation/pages/intro_page.dart';
 part 'account_state.dart';
 
 class AccountCubit extends Cubit<AccountState> {
-  AccountCubit({required this.verifyLoginUseCase, required this.getAccountInfoUseCase, required this.setSharedStringUseCase, required this.getSharedStringUseCase}) : super(AccountInitial());
+  AccountCubit({required this.verifyLoginForAccountInfoUseCase, required this.getAccountInfoUseCase, required this.setSharedStringUseCase, required this.getSharedStringUseCase}) : super(AccountInitial());
 
-  final VerifyLoginUseCase verifyLoginUseCase;
+  final VerifyLoginForAccountInfoUseCase verifyLoginForAccountInfoUseCase;
   final GetAccountInfoUseCase getAccountInfoUseCase;
   final GetSharedStringUseCase getSharedStringUseCase;
   final SetSharedStringUseCase setSharedStringUseCase;
 
   Future<void> loadAccountPage() async{
     emit(AccountPageLoadingState());
-    String result = await verifyLoginUseCase.call(getSharedStringUseCase.call('refreshToken')!);
+    String result = await verifyLoginForAccountInfoUseCase.call(getSharedStringUseCase.call('refreshToken')!);
     if(result == ''){
       emit(AccountPageErrorState());
     } else {

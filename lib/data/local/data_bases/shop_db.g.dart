@@ -585,13 +585,192 @@ class $CachedProductsTable extends CachedProducts
   }
 }
 
+class CachedCategoryData extends DataClass
+    implements Insertable<CachedCategoryData> {
+  final String name;
+  final String icon;
+  CachedCategoryData({required this.name, required this.icon});
+  factory CachedCategoryData.fromData(Map<String, dynamic> data,
+      {String? prefix}) {
+    final effectivePrefix = prefix ?? '';
+    return CachedCategoryData(
+      name: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}category_name'])!,
+      icon: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}category_icon'])!,
+    );
+  }
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['category_name'] = Variable<String>(name);
+    map['category_icon'] = Variable<String>(icon);
+    return map;
+  }
+
+  CachedCategoryCompanion toCompanion(bool nullToAbsent) {
+    return CachedCategoryCompanion(
+      name: Value(name),
+      icon: Value(icon),
+    );
+  }
+
+  factory CachedCategoryData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return CachedCategoryData(
+      name: serializer.fromJson<String>(json['name']),
+      icon: serializer.fromJson<String>(json['icon']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'name': serializer.toJson<String>(name),
+      'icon': serializer.toJson<String>(icon),
+    };
+  }
+
+  CachedCategoryData copyWith({String? name, String? icon}) =>
+      CachedCategoryData(
+        name: name ?? this.name,
+        icon: icon ?? this.icon,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('CachedCategoryData(')
+          ..write('name: $name, ')
+          ..write('icon: $icon')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(name, icon);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is CachedCategoryData &&
+          other.name == this.name &&
+          other.icon == this.icon);
+}
+
+class CachedCategoryCompanion extends UpdateCompanion<CachedCategoryData> {
+  final Value<String> name;
+  final Value<String> icon;
+  const CachedCategoryCompanion({
+    this.name = const Value.absent(),
+    this.icon = const Value.absent(),
+  });
+  CachedCategoryCompanion.insert({
+    required String name,
+    required String icon,
+  })  : name = Value(name),
+        icon = Value(icon);
+  static Insertable<CachedCategoryData> custom({
+    Expression<String>? name,
+    Expression<String>? icon,
+  }) {
+    return RawValuesInsertable({
+      if (name != null) 'category_name': name,
+      if (icon != null) 'category_icon': icon,
+    });
+  }
+
+  CachedCategoryCompanion copyWith({Value<String>? name, Value<String>? icon}) {
+    return CachedCategoryCompanion(
+      name: name ?? this.name,
+      icon: icon ?? this.icon,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (name.present) {
+      map['category_name'] = Variable<String>(name.value);
+    }
+    if (icon.present) {
+      map['category_icon'] = Variable<String>(icon.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CachedCategoryCompanion(')
+          ..write('name: $name, ')
+          ..write('icon: $icon')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $CachedCategoryTable extends CachedCategory
+    with TableInfo<$CachedCategoryTable, CachedCategoryData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $CachedCategoryTable(this.attachedDatabase, [this._alias]);
+  final VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String?> name = GeneratedColumn<String?>(
+      'category_name', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _iconMeta = const VerificationMeta('icon');
+  @override
+  late final GeneratedColumn<String?> icon = GeneratedColumn<String?>(
+      'category_icon', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [name, icon];
+  @override
+  String get aliasedName => _alias ?? 'cached_category';
+  @override
+  String get actualTableName => 'cached_category';
+  @override
+  VerificationContext validateIntegrity(Insertable<CachedCategoryData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('category_name')) {
+      context.handle(_nameMeta,
+          name.isAcceptableOrUnknown(data['category_name']!, _nameMeta));
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('category_icon')) {
+      context.handle(_iconMeta,
+          icon.isAcceptableOrUnknown(data['category_icon']!, _iconMeta));
+    } else if (isInserting) {
+      context.missing(_iconMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {name};
+  @override
+  CachedCategoryData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    return CachedCategoryData.fromData(data,
+        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+  }
+
+  @override
+  $CachedCategoryTable createAlias(String alias) {
+    return $CachedCategoryTable(attachedDatabase, alias);
+  }
+}
+
 abstract class _$ShopDb extends GeneratedDatabase {
   _$ShopDb(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
   late final $FavoriteTable favorite = $FavoriteTable(this);
   late final $CachedProductsTable cachedProducts = $CachedProductsTable(this);
+  late final $CachedCategoryTable cachedCategory = $CachedCategoryTable(this);
   @override
   Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [favorite, cachedProducts];
+      [favorite, cachedProducts, cachedCategory];
 }

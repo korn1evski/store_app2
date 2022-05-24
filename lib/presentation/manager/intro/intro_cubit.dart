@@ -36,8 +36,7 @@ class IntroCubit extends Cubit<IntroState> {
           emit(IntroLoadedState());
         }
       } else {
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => LoginPage()));
+        emit(IntroElseState());
       }
     } on SocketException catch (_) {
       final accessToken = getSharedStringUseCase.call('accessToken');

@@ -9,17 +9,19 @@ class IntroPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-      BlocProvider.of<IntroCubit>(context).verifyLogin(context);
-      return BlocBuilder<IntroCubit, IntroState>(builder: (context, state) {
-        if (state is IntroLoadingState) {
-          return Scaffold(body: Center(child: CircularProgressIndicator()));
-        } else if (state is IntroLoadedState) {
-          return NavPage();
-        } else if (state is IntroErrorLoadedState) {
-          return LoginPage();
-        } else {
-          return Container();
-        }
-      });
+    BlocProvider.of<IntroCubit>(context).verifyLogin(context);
+    return BlocBuilder<IntroCubit, IntroState>(builder: (context, state) {
+      if (state is IntroLoadingState) {
+        return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      } else if (state is IntroLoadedState) {
+        return const NavPage();
+      } else if (state is IntroErrorLoadedState) {
+        return const LoginPage();
+      } else if (state is IntroElseState) {
+        return const LoginPage();
+      } else {
+        return Container();
+      }
+    });
   }
 }

@@ -18,6 +18,9 @@ import '../models/products_model.dart';
 
 class SwaggerRemoteDataSourceImpl extends SwaggerRemoteDataSource {
   final String baseUrl = 'http://mobile-shop-api.hiring.devebs.net';
+  final Dio dio;
+
+  SwaggerRemoteDataSourceImpl({required this.dio});
 
   @override
   Future<List<CategoryEntity>?> getCategoriesData() async {
@@ -57,11 +60,11 @@ class SwaggerRemoteDataSourceImpl extends SwaggerRemoteDataSource {
   @override
   Future<IdProductEntity?> getProductById(int id) async {
     String apiUrl = '/products/$id';
-    http.Response response = await http.get(Uri.parse(baseUrl + apiUrl));
+   final response = await dio.get(baseUrl + apiUrl);
 
     try {
       if (response.statusCode == 200) {
-        final idProductEntity = idProductFromJson(response.body);
+        final idProductEntity = IdProductModel.fromJson(response.data);
         return idProductEntity;
       } else {
         return null;
